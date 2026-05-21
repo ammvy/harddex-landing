@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import type { IUserService } from '@/services/user.service';
-import { createUserDTO, updateUserDTO, paramIdDTO } from '@/dtos/user.dto';
+import type { IUserService } from '@/services/user.service.interface';
+import { createUserDTO, updateUserDTO, paramIdDTO } from '@/routes/schemas/user.schema';
 
 export class UserController {
   constructor(private readonly service: IUserService) {}

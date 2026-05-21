@@ -1,16 +1,6 @@
-import type { IUserDAO } from '@/dao/user.dao';
+import type { IUserRepository } from './user.repository.interface';
+import type { IUserDAO } from '@/dao/user.dao.interface';
 import type { UserSelect } from '@infra/database/schema/user.schema';
-
-// ── Interface ──
-export interface IUserRepository {
-  findAll(): Promise<UserSelect[]>;
-  findById(id: string): Promise<UserSelect | null>;
-  findByEmail(email: string): Promise<UserSelect | null>;
-  create(data: { name: string; email: string; avatarUrl?: string }): Promise<UserSelect>;
-  update(id: string, data: Partial<{ name: string; email: string; avatarUrl: string }>): Promise<UserSelect | null>;
-  delete(id: string): Promise<boolean>;
-  existsByEmail(email: string): Promise<boolean>;
-}
 
 // ── Implementação ──
 export class UserRepository implements IUserRepository {

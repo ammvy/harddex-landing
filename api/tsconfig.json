@@ -14,9 +14,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@infra/*": ["../infra/*"]
+      "@infra/*": ["./src/infra/*"],
     }
   },
-  "include": ["src/**/*", "../infra/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

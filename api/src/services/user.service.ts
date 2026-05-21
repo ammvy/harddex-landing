@@ -1,20 +1,10 @@
-import type { IUserRepository } from '@/repositories/user.repository';
+import type { IUserService } from './user.service.interface';
+import type { IUserRepository } from '@/repositories/user.repository.interface';
 import type { FirebaseStorage } from '@infra/firebase/storage';
 import type { UserSelect } from '@infra/database/schema/user.schema';
 import { NotFoundError } from '@/errors/not-found.error';
 import { ValidationError } from '@/errors/validation.error';
-import type { CreateUserInput, UpdateUserInput } from '@/dtos/user.dto';
-
-// ── Interface ──
-export interface IUserService {
-  getAll(): Promise<UserSelect[]>;
-  getById(id: string): Promise<UserSelect>;
-  getByEmail(email: string): Promise<UserSelect>;
-  create(data: CreateUserInput): Promise<UserSelect>;
-  update(id: string, data: UpdateUserInput): Promise<UserSelect>;
-  delete(id: string): Promise<void>;
-  uploadAvatar(userId: string, buffer: Buffer, mimetype: string): Promise<UserSelect>;
-}
+import type { CreateUserInput, UpdateUserInput } from '@/routes/schemas/user.schema';
 
 // ── Implementação ──
 export class UserService implements IUserService {
