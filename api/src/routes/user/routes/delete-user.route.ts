@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
-import { errorResponseDTO, paramIdDTO } from "../../dtos/user.schema";
+import { errorResponseDTO, paramIdDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export function deleteUserRoute(controller: UserController) {

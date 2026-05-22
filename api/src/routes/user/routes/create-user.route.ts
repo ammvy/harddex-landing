@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
-import { createUserDTO, errorDetailsResponseDTO, userSuccessResponseDTO } from "../../dtos/user.schema";
+import { createUserDTO, errorDetailsResponseDTO, userSuccessResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export function createUserRoute(controller: UserController) {

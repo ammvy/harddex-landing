@@ -3,7 +3,6 @@ import { eq } from 'drizzle-orm';
 import { users, type UserSelect } from '@infra/database/schema/user.schema';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-// ── Implementação ──
 export class UserDAO implements IUserDAO {
   constructor(private readonly db: NodePgDatabase<any>) {}
 

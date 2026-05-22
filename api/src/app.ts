@@ -6,15 +6,15 @@ import swaggerUi from "@fastify/swagger-ui";
 import { errorHandler } from "@/middlewares/error-handler";
 import { env } from "@/config/env";
 
-import { UserDAO } from "@/dao/user.dao";
-import { UserRepository } from "@/repositories/user.repository";
-import { UserService } from "@/services/user.service";
-import { UserController } from "@/controllers/user.controller";
-import { globalRoutes } from "@/routes/index";
+import { UserDAO } from "@/dao";
+import { UserRepository } from "@/repositories";
+import { UserService } from "@/services";
+import { UserController } from "@/controllers";
+import { globalRoutes } from "@/routes";
 
-import { createDatabase } from "./infra/database/connection";
-import { initFirebase } from "./infra/firebase/admin";
-import { FirebaseStorage } from "./infra/firebase/storage";
+import { createDatabase } from "@infra/database/connection";
+import { initFirebase } from "@infra/firebase/admin";
+import { FirebaseStorage } from "@infra/firebase/storage";
 
 export function buildApp() {
   const app = Fastify({ logger: true });
@@ -58,7 +58,6 @@ export function buildApp() {
   const userService = new UserService(userRepository, storage);
   const userController = new UserController(userService);
 
-  // Rotas
   app.register(globalRoutes(userController), { prefix: "/api/v1" });
 
   return app;

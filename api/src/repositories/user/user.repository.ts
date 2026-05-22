@@ -1,8 +1,6 @@
 import type { IUserRepository } from './user.repository.interface';
-import type { IUserDAO } from '@/dao/user.dao.interface';
-import type { UserSelect } from '@infra/database/schema/user.schema';
+import type { IUserDAO } from '@/dao/user/user.dao.interface';
 
-// ── Implementação ──
 export class UserRepository implements IUserRepository {
   constructor(private readonly dao: IUserDAO) {}
 
