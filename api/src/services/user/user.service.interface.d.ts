@@ -1,4 +1,4 @@
-import type { UserSelect } from '@infra/database/schema/user.schema';
+import type { UserSelect } from '@/infra/database/models/user.schema';
 import type { CreateUserInput, UpdateUserInput } from '@/routes/user/dtos/user.schema';
 
 export interface IUserService {

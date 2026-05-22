@@ -1,4 +1,4 @@
-import type { UserSelect } from '@infra/database/schema/user.schema';
+import type { UserSelect } from '@/infra/database/models/user.schema';
 
 export interface IUserRepository {
   findAll(): Promise<UserSelect[]>;

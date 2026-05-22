@@ -12,3 +12,4 @@ export const users = pgTable('users', {
 // Tipo inferido do schema para uso nas camadas
 export type UserSelect = typeof users.$inferSelect;
 export type UserInsert = typeof users.$inferInsert;
+export type UserUpdate = Partial<typeof users.$inferInsert>;
