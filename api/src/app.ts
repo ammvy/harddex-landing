@@ -5,9 +5,9 @@ import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { errorHandler } from "@/middlewares/error-handler";
 import { env } from "@/config/env";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 import { UserDAO } from "@/dao";
-import { UserRepository } from "@/repositories";
 import { UserService } from "@/services";
 import { UserController } from "@/controllers";
 import { globalRoutes } from "@/routes";
@@ -18,6 +18,9 @@ import { FirebaseStorage } from "@infra/firebase/storage";
 
 export function buildApp() {
   const app = Fastify({ logger: true });
+
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
 
   app.register(cors, { origin: true });
   app.register(multipart);
@@ -54,8 +57,7 @@ export function buildApp() {
   const storage = new FirebaseStorage();
 
   const userDAO = new UserDAO(db);
-  const userRepository = new UserRepository(userDAO);
-  const userService = new UserService(userRepository, storage);
+  const userService = new UserService(userDAO, storage);
   const userController = new UserController(userService);
 
   app.register(globalRoutes(userController), { prefix: "/api/v1" });

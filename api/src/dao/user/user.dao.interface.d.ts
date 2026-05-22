@@ -1,4 +1,4 @@
-import type { UserSelect } from '@/infra/database/models/user.schema';
+import type { UserSelect } from '@infra/database/models/user.schema';
 
 export interface IUserDAO {
   findAll(): Promise<UserSelect[]>;

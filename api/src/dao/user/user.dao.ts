@@ -1,6 +1,6 @@
 import type { IUserDAO } from './user.dao.interface';
 import { eq } from 'drizzle-orm';
-import { users, type UserSelect } from '@/infra/database/models/user.schema';
+import { users, type UserSelect } from '@infra/database/models/user.schema';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 export class UserDAO implements IUserDAO {
