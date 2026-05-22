@@ -6,6 +6,6 @@ export const userResponseDTO = z.object({
   name: z.string(),
   email: z.string().email(),
   avatarUrl: z.string().nullable(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });

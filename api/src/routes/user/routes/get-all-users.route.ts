@@ -3,7 +3,7 @@ import type { UserController } from "@/controllers/user.controller";
 import { getAllUsersResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
-export function getAllUsersRoute(controller: UserController) {
+export function getAllUsersRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().get(
       "/",

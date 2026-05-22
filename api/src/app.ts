@@ -8,7 +8,7 @@ import { env } from "@/config/env";
 import {
   serializerCompiler,
   validatorCompiler,
-  jsonSchemaTransform,
+  createJsonSchemaTransform,
 } from "fastify-type-provider-zod";
 
 import { UserDAO } from "@/dao";
@@ -44,7 +44,18 @@ export function buildApp() {
         },
       ],
     },
-    transform: jsonSchemaTransform,
+    transform: createJsonSchemaTransform({
+      skipList: [
+        "/docs",
+        "/docs/",
+        "/docs/json",
+        "/docs/yaml",
+        "/docs/initOAuth",
+        "/docs/uiConfig",
+        "/docs/*",
+        "/docs/static/*",
+      ],
+    }),
   });
 
   app.register(swaggerUi, {

@@ -11,22 +11,22 @@ export class UserDAO implements IUserDAO {
     return rows as UserSelect[];
   }
 
-  async findById(id: string): Promise<UserSelect | null> {
+  async findById({ id }: { id: string }): Promise<UserSelect | null> {
     const rows = await this.db.select().from(users).where(eq(users.id, id));
     return (rows[0] ?? null) as UserSelect | null;
   }
 
-  async findByEmail(email: string): Promise<UserSelect | null> {
+  async findByEmail({ email }: { email: string }): Promise<UserSelect | null> {
     const rows = await this.db.select().from(users).where(eq(users.email, email));
     return (rows[0] ?? null) as UserSelect | null;
   }
 
-  async create(data: { name: string; email: string; avatarUrl?: string }): Promise<UserSelect> {
+  async create({ data }: { data: { name: string; email: string; avatarUrl?: string } }): Promise<UserSelect> {
     const rows = await this.db.insert(users).values(data).returning();
     return rows[0] as UserSelect;
   }
 
-  async update(id: string, data: Partial<{ name: string; email: string; avatarUrl: string }>): Promise<UserSelect | null> {
+  async update({ id, data }: { id: string; data: Partial<{ name: string; email: string; avatarUrl: string }> }): Promise<UserSelect | null> {
     const rows = await this.db.update(users)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(users.id, id))
@@ -34,7 +34,7 @@ export class UserDAO implements IUserDAO {
     return (rows[0] ?? null) as UserSelect | null;
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete({ id }: { id: string }): Promise<boolean> {
     const rows = await this.db.delete(users).where(eq(users.id, id)).returning();
     return rows.length > 0;
   }

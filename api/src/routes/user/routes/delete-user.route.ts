@@ -4,7 +4,7 @@ import { errorResponseDTO, paramIdDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 
-export function deleteUserRoute(controller: UserController) {
+export function deleteUserRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().delete(
       "/:id",

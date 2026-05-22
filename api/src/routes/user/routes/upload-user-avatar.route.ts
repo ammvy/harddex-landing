@@ -3,7 +3,7 @@ import type { UserController } from "@/controllers/user.controller";
 import { errorResponseDTO, paramIdDTO, userSuccessResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
-export function uploadUserAvatarRoute(controller: UserController) {
+export function uploadUserAvatarRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
     app.withTypeProvider<ZodTypeProvider>().patch(
       "/:id/avatar",

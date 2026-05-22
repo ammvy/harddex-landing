@@ -4,6 +4,6 @@ import { userRoutes } from "./user";
 
 export function globalRoutes(controller: UserController) {
   return async (app: FastifyInstance) => {
-    app.register(userRoutes(controller), { prefix: "/users" });
+    app.register(userRoutes({ controller }), { prefix: "/users" });
   };
 }
