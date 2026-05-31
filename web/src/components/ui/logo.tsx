@@ -19,7 +19,13 @@ type LogoProps = {
 function Logo({ className, text }: LogoProps) {
   return (
     <div
-      className={cn(shareTech.className, "text-[256px] uppercase", className)}
+      className={cn(
+        shareTech.className,
+        "logo-bounce inline-block uppercase",
+        "text-[64px] sm:text-[96px] md:text-[128px] lg:text-[192px] xl:text-[256px]",
+        "-translate-y-4",
+        className,
+      )}
     >
       {text || (
         <>
