@@ -19,6 +19,7 @@ import { globalRoutes } from "@/routes";
 import { createDatabase } from "@infra/database/connection";
 import { initFirebase } from "@infra/firebase/admin";
 import { FirebaseStorage } from "@infra/firebase/storage";
+import { AnaController } from "./controllers/ana.controller";
 
 export function buildApp() {
   const app = Fastify({ logger: true });
@@ -75,8 +76,15 @@ export function buildApp() {
   const userDAO = new UserDAO(db);
   const userService = new UserService(userDAO, storage);
   const userController = new UserController(userService);
+  const anaController = new AnaController(userService)
 
-  app.register(globalRoutes(userController), { prefix: "/api/v1" });
+  app.register(
+    globalRoutes({
+      userController,
+      anaController,
+    }),
+    { prefix: "/api/v1" }
+  );
 
   return app;
 }
