@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
 import { errorResponseDTO, paramIdDTO, userSuccessResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { adaptRoute } from "@/adapters/fastify-route-adapter";
 
 export function uploadUserAvatarRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
@@ -19,7 +20,7 @@ export function uploadUserAvatarRoute({ controller }: { controller: UserControll
           },
         },
       },
-      controller.uploadAvatar.bind(controller),
+      adaptRoute(controller.uploadAvatar.bind(controller)),
     );
   };
 }
