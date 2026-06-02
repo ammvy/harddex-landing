@@ -1,49 +1,60 @@
-import type { FastifyRequest, FastifyReply } from 'fastify';
-import type { IUserService } from '@/services/user/user.service.interface';
-import { createUserDTO, updateUserDTO, paramIdDTO } from '@/routes/user/dtos/user.schema';
+import type { IUserService } from "@/services/user/user.service.interface";
+import type { HttpRequest, HttpResponse } from "@/interfaces/http";
+import {
+  createUserDTO,
+  updateUserDTO,
+  paramIdDTO,
+} from "@/routes/user/dtos/user.schema";
 
 export class UserController {
   constructor(private readonly service: IUserService) {}
 
-  async getAll(_req: FastifyRequest, reply: FastifyReply) {
+  async getAll(_req: HttpRequest): Promise<HttpResponse> {
     const users = await this.service.getAll();
-    reply.send({ success: true, data: users });
+    return { statusCode: 200, body: { success: true, data: users } };
   }
 
-  async getById(req: FastifyRequest, reply: FastifyReply) {
+  async getById(req: HttpRequest): Promise<HttpResponse> {
     const { id } = paramIdDTO.parse(req.params);
     const user = await this.service.getById({ id });
-    reply.send({ success: true, data: user });
+    return { statusCode: 200, body: { success: true, data: user } };
   }
 
-  async create(req: FastifyRequest, reply: FastifyReply) {
+  async create(req: HttpRequest): Promise<HttpResponse> {
     const data = createUserDTO.parse(req.body);
     const user = await this.service.create({ data });
-    reply.status(201).send({ success: true, data: user });
+    return { statusCode: 201, body: { success: true, data: user } };
   }
 
-  async update(req: FastifyRequest, reply: FastifyReply) {
+  async update(req: HttpRequest): Promise<HttpResponse> {
     const { id } = paramIdDTO.parse(req.params);
     const data = updateUserDTO.parse(req.body);
     const user = await this.service.update({ id, data });
-    reply.send({ success: true, data: user });
+    return { statusCode: 200, body: { success: true, data: user } };
   }
 
-  async delete(req: FastifyRequest, reply: FastifyReply) {
+  async delete(req: HttpRequest): Promise<HttpResponse> {
     const { id } = paramIdDTO.parse(req.params);
     await this.service.delete({ id });
-    reply.status(204).send();
+    return { statusCode: 204 };
   }
 
-  async uploadAvatar(req: FastifyRequest, reply: FastifyReply) {
+  async uploadAvatar(req: HttpRequest): Promise<HttpResponse> {
     const { id } = paramIdDTO.parse(req.params);
-    const file = await req.file();
-    if (!file) {
-      reply.status(400).send({ success: false, error: { message: 'No file uploaded' } });
-      return;
+
+    if (!req.file) {
+      return {
+        statusCode: 400,
+        body: { success: false, error: { message: "No file uploaded" } },
+      };
     }
-    const buffer = await file.toBuffer();
-    const user = await this.service.uploadAvatar({ userId: id, buffer, mimetype: file.mimetype });
-    reply.send({ success: true, data: user });
+
+    const user = await this.service.uploadAvatar({
+      userId: id,
+      buffer: req.file.buffer,
+      mimetype: req.file.mimetype,
+    });
+
+    return { statusCode: 200, body: { success: true, data: user } };
   }
 }

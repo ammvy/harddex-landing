@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
 import { createUserDTO, errorDetailsResponseDTO, userSuccessResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { adaptRoute } from "@/adapters/fastify-route-adapter";
 
 export function createUserRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
@@ -18,7 +19,7 @@ export function createUserRoute({ controller }: { controller: UserController }) 
           },
         },
       },
-      controller.create.bind(controller),
+      adaptRoute(controller.create.bind(controller)),
     );
   };
 }

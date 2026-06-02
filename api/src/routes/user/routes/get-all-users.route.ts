@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
 import { getAllUsersResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { adaptRoute } from "@/adapters/fastify-route-adapter";
 
 export function getAllUsersRoute({ controller }: { controller: UserController }) {
   return async (app: FastifyInstance) => {
@@ -16,7 +17,7 @@ export function getAllUsersRoute({ controller }: { controller: UserController })
           },
         },
       },
-      controller.getAll.bind(controller),
+      adaptRoute(controller.getAll.bind(controller)),
     );
   };
 }
