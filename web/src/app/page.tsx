@@ -2,11 +2,12 @@ import { ScrollToBounce } from "@/components/scroll-to-bounce";
 import Container from "@/components/ui/container";
 import Logo from "@/components/logo";
 import HeroPersonas from "@/components/hero-personas";
+import HeroNavigations from "@/components/hero-navigations";
 
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-background">
-      <Container className="relative">
+      <Container className="relative mx-auto">
         <Logo />
         <ScrollToBounce
           direction="bottom"
@@ -14,6 +15,7 @@ export default function Home() {
         />
       </Container>
       <HeroPersonas />
+      <HeroNavigations />
     </div>
   );
 }

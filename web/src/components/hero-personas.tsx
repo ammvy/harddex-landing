@@ -5,7 +5,7 @@ import { ProPersona } from "@/components/mouse/personas/pro";
 
 export default function HeroPersonas() {
   return (
-    <Container className="flex-row gap-20 mt-32 md:mt-50 grid grid-cols-1 sm:grid sm:grid-cols-2 sm:col-span-3 lg:mt-0 lg:flex lg:flex-row">
+    <Container className="flex-row gap-20 mt-48 md:mt-50 grid grid-cols-1 sm:grid sm:grid-cols-2 sm:col-span-3 lg:mt-0 lg:flex lg:flex-row">
       <div
         className="flex flex-col items-start sm:items-end gap-4"
         style={{
