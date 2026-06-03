@@ -15,7 +15,18 @@ export default function Home() {
           containerClassName="absolute bottom-4 left-1/2 -translate-x-1/2"
         />
       </Container>
-      <Container className="flex-row gap-20">
+      <Container className="flex-row gap-20 mt-32 md:mt-50 grid grid-cols-1 sm:grid sm:grid-cols-2 sm:col-span-3 lg:mt-0 lg:flex lg:flex-row">
+        <div className="flex flex-col items-start sm:items-end gap-4">
+          <h1 className="text-4xl uppercase tracking-widest">
+            Compare<span className="text-primary">.</span>
+          </h1>
+          <h1 className="text-4xl uppercase tracking-widest text-primary">
+            Descubra<span className="text-foreground">.</span>
+          </h1>
+          <h1 className="text-4xl uppercase tracking-widest">
+            Resolva<span className="text-primary">.</span>
+          </h1>
+        </div>
         <div className="bg-foreground p-10 relative group">
           <StudyPersona className="w-full max-w-[200px] group-hover:scale-105 transition-all duration-300 ease-in-out" />
           <span className="uppercase tracking-widest text-[.8rem] text-foreground absolute -bottom-8 left-2">
