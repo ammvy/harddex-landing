@@ -1,6 +1,6 @@
 import type { IUserDAO } from './user.dao.interface';
 import { eq } from 'drizzle-orm';
-import { users, type UserSelect } from '@infra/database/models/user.schema';
+import { users, type UserSelect, type UserInsert } from '@infra/database/models/user.schema';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 export class UserDAO implements IUserDAO {
@@ -11,7 +11,7 @@ export class UserDAO implements IUserDAO {
     return rows as UserSelect[];
   }
 
-  async findById({ id }: { id: string }): Promise<UserSelect | null> {
+  async findById({ id }: { id: number }): Promise<UserSelect | null> {
     const rows = await this.db.select().from(users).where(eq(users.id, id));
     return (rows[0] ?? null) as UserSelect | null;
   }
@@ -21,20 +21,20 @@ export class UserDAO implements IUserDAO {
     return (rows[0] ?? null) as UserSelect | null;
   }
 
-  async create({ data }: { data: { name: string; email: string; avatarUrl?: string } }): Promise<UserSelect> {
+  async create({ data }: { data: UserInsert }): Promise<UserSelect> {
     const rows = await this.db.insert(users).values(data).returning();
     return rows[0] as UserSelect;
   }
 
-  async update({ id, data }: { id: string; data: Partial<{ name: string; email: string; avatarUrl: string }> }): Promise<UserSelect | null> {
+  async update({ id, data }: { id: number; data: Partial<UserInsert> }): Promise<UserSelect | null> {
     const rows = await this.db.update(users)
-      .set({ ...data, updatedAt: new Date() })
+      .set(data)
       .where(eq(users.id, id))
       .returning();
     return (rows[0] ?? null) as UserSelect | null;
   }
 
-  async delete({ id }: { id: string }): Promise<boolean> {
+  async delete({ id }: { id: number }): Promise<boolean> {
     const rows = await this.db.delete(users).where(eq(users.id, id)).returning();
     return rows.length > 0;
   }

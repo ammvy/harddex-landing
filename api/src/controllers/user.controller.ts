@@ -38,23 +38,4 @@ export class UserController {
     await this.service.delete({ id });
     return { statusCode: 204 };
   }
-
-  async uploadAvatar(req: HttpRequest): Promise<HttpResponse> {
-    const { id } = paramIdDTO.parse(req.params);
-
-    if (!req.file) {
-      return {
-        statusCode: 400,
-        body: { success: false, error: { message: "No file uploaded" } },
-      };
-    }
-
-    const user = await this.service.uploadAvatar({
-      userId: id,
-      buffer: req.file.buffer,
-      mimetype: req.file.mimetype,
-    });
-
-    return { statusCode: 200, body: { success: true, data: user } };
-  }
 }

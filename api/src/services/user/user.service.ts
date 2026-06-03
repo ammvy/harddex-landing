@@ -8,16 +8,16 @@ import type { CreateUserInput, UpdateUserInput } from '@/routes/user/dtos/user.s
 export class UserService implements IUserService {
   constructor(
     private readonly dao: IUserDAO,
-    private readonly storage: FirebaseStorage,
+    private readonly storage?: FirebaseStorage,
   ) {}
 
   async getAll() {
     return this.dao.findAll();
   }
 
-  async getById({ id }: { id: string }) {
+  async getById({ id }: { id: number }) {
     const user = await this.dao.findById({ id });
-    if (!user) throw new NotFoundError('User', id);
+    if (!user) throw new NotFoundError('User', String(id));
     return user;
   }
 
@@ -33,30 +33,15 @@ export class UserService implements IUserService {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: string; data: UpdateUserInput }) {
+  async update({ id, data }: { id: number; data: UpdateUserInput }) {
     const user = await this.dao.update({ id, data });
-    if (!user) throw new NotFoundError('User', id);
+    if (!user) throw new NotFoundError('User', String(id));
     return user;
   }
 
-  async delete({ id }: { id: string }) {
+  async delete({ id }: { id: number }) {
     const user = await this.dao.findById({ id });
-    if (!user) throw new NotFoundError('User', id);
-
-    // Deleta avatar do Storage se existir
-    if (user.avatarUrl) {
-      await this.storage.delete(`avatars/${id}`);
-    }
+    if (!user) throw new NotFoundError('User', String(id));
     await this.dao.delete({ id });
-  }
-
-  async uploadAvatar({ userId, buffer, mimetype }: { userId: string; buffer: Buffer; mimetype: string }) {
-    const user = await this.dao.findById({ id: userId });
-    if (!user) throw new NotFoundError('User', userId);
-
-    const path = `avatars/${userId}`;
-    const publicUrl = await this.storage.upload(buffer, path, mimetype);
-    const updated = await this.dao.update({ id: userId, data: { avatarUrl: publicUrl } });
-    return updated!;
   }
 }
