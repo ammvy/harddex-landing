@@ -4,7 +4,7 @@ services:
     container_name: harddex-postgres
     restart: unless-stopped
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: harddex
       POSTGRES_PASSWORD: harddex123
@@ -27,7 +27,6 @@ services:
     environment:
       GCP_PROJECT: harddex-project
       ENABLE_UI: "true"
-
 
 volumes:
   postgres_data:

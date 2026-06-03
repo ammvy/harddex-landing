@@ -1,5 +1,5 @@
 import z from "zod";
 
 export const paramIdDTO = z.object({
-  id: z.string().describe("ID do usuário"),
+  id: z.coerce.number().int().positive().describe("ID do usuário"),
 });
