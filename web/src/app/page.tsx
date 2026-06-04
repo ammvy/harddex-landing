@@ -4,6 +4,7 @@ import Logo from "./_components/logo";
 import HeroPersonas from "./_components/hero-personas";
 import HeroNavigations from "./_components/hero-navigations";
 import HeroUseCases from "./_components/hero-use-cases";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <HeroPersonas />
       <HeroNavigations />
       <HeroUseCases />
+      <Footer />
     </div>
   );
 }
