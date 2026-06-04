@@ -7,7 +7,7 @@ import {
   GitDiffIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { motion } from "motion/react";
-import Container from "./ui/container";
+import Container from "@/components/ui/container";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 

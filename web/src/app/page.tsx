@@ -1,8 +1,9 @@
 import { ScrollToBounce } from "@/components/scroll-to-bounce";
 import Container from "@/components/ui/container";
-import Logo from "@/components/logo";
-import HeroPersonas from "@/components/hero-personas";
-import HeroNavigations from "@/components/hero-navigations";
+import Logo from "./_components/logo";
+import HeroPersonas from "./_components/hero-personas";
+import HeroNavigations from "./_components/hero-navigations";
+import HeroUseCases from "./_components/hero-use-cases";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       </Container>
       <HeroPersonas />
       <HeroNavigations />
+      <HeroUseCases />
     </div>
   );
 }
