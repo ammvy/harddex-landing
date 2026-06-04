@@ -43,13 +43,13 @@ function HeroNavigations() {
           lineHeight: 0.95,
         }}
       >
-        <h2 className="text-6xl uppercase text-left w-full">
+        <h2 className="text-6xl uppercase text-left max-[375px]:text-4xl w-full">
           Do que você
           <br />
           <span className="text-primary">precisa?</span>
         </h2>
       </header>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 w-fit px-10">
         {cards.map((c, i) => {
           return (
             <motion.a
@@ -76,7 +76,7 @@ function HeroNavigations() {
                 />
               </div>
               <div className={`flex-1 flex items-center justify-center my-2`}>
-                <c.Art className="size-32" />
+                <c.Art className="max-[375px]:size-20 size-32" />
               </div>
               <div className={`px-5 pb-5`}>
                 <div
@@ -88,7 +88,11 @@ function HeroNavigations() {
                 >
                   {c.title}
                 </div>
-                <p className={`mt-2 text-[12px] leading-snug`}>{c.desc}</p>
+                <p
+                  className={`mt-2 text-[12px] leading-snug max-[375px]:hidden`}
+                >
+                  {c.desc}
+                </p>
               </div>
             </motion.a>
           );

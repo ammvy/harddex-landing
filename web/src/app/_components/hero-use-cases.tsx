@@ -19,21 +19,24 @@ function HeroUseCases() {
             y="12"
             width="44"
             height="30"
-            fill={active ? "#000" : "#fff"}
+            opacity={0.9}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
           <rect
             x="16"
             y="18"
             width="32"
             height="18"
-            fill={active ? "#fff" : "#000"}
+            opacity={0.9}
+            fill={active ? "var(--background)" : "var(--foreground)"}
           />
           <rect
             x="4"
             y="44"
             width="56"
             height="6"
-            fill={active ? "#000" : "#fff"}
+            opacity={0.9}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
         </svg>
       ),
@@ -50,21 +53,24 @@ function HeroUseCases() {
             y="12"
             width="48"
             height="10"
-            fill={active ? "#000" : "#fff"}
+            opacity={0.9}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
           <rect
             x="10"
             y="22"
             width="44"
             height="32"
-            fill={active ? "#000" : "#fff"}
+            opacity={0.9}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
           <rect
             x="26"
             y="32"
             width="12"
             height="4"
-            fill={active ? "#fff" : "#000"}
+            opacity={0.9}
+            fill={active ? "var(--background)" : "var(--foreground)"}
           />
         </svg>
       ),
@@ -81,16 +87,24 @@ function HeroUseCases() {
             y="8"
             width="24"
             height="48"
-            fill={active ? "#000" : "#fff"}
+            opacity={0.9}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
           <rect
             x="24"
             y="14"
             width="16"
             height="32"
-            fill={active ? "#fff" : "#000"}
+            opacity={0.9}
+            fill={active ? "var(--background)" : "var(--foreground)"}
           />
-          <circle cx="32" cy="51" r="2" fill={active ? "#fff" : "#000"} />
+          <circle
+            cx="32"
+            cy="51"
+            r="2"
+            opacity={0.9}
+            fill={active ? "var(--background)" : "var(--foreground)"}
+          />
         </svg>
       ),
       specs: ['Tela ≤ 14"', "Peso < 1.4 kg", "Bateria 10h+"],
@@ -103,15 +117,13 @@ function HeroUseCases() {
         <svg viewBox="0 0 64 64" className="w-full h-full p-3">
           <polygon
             points="30,6 34,6 38,28 58,40 58,44 36,40 36,52 42,56 42,58 32,56 22,58 22,56 28,52 28,40 6,44 6,40 26,28"
-            fill={active ? "#000" : "#fff"}
+            fill={active ? "var(--foreground)" : "var(--background)"}
           />
         </svg>
       ),
       specs: ["≤ 1 kg", "USB-C universal", "Conectividade 5G"],
     },
   ];
-
-  const ACCENT = "var(--color-primary)";
 
   const [useIdx, setUseIdx] = useState(0);
   const selected = useCases[useIdx];
@@ -123,11 +135,11 @@ function HeroUseCases() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="mt-28 lg:mt-40 mb-20"
+        className="max-sm:mt-72 mt-28 lg:mt-40 mb-20"
       >
-        <div className="bg-black text-white relative overflow-hidden">
-          <div className="grid grid-cols-12 border-b border-white/15">
-            <div className="col-span-12 md:col-span-7 border-r border-white/15 px-8 lg:px-12 py-6 flex items-center justify-between">
+        <div className="bg-foreground/90 text-background relative overflow-hidden">
+          <div className="grid grid-cols-12 border-b border-background/15">
+            <div className="col-span-12 md:col-span-7 border-r border-background/15 px-8 lg:px-12 py-6 flex items-center justify-between">
               <h3
                 style={{ fontFamily: "'Space Mono', monospace" }}
                 className="lowercase text-[clamp(28px,3.4vw,42px)]"
@@ -138,10 +150,7 @@ function HeroUseCases() {
                 className="flex items-center gap-2"
                 style={{ fontFamily: "'Space Mono', monospace" }}
               >
-                <span
-                  className="w-1.5 h-1.5 block animate-pulse"
-                  style={{ background: ACCENT }}
-                />
+                <span className="w-1.5 h-1.5 block animate-pulse bg-primary" />
                 <span className="uppercase tracking-widest text-[10px] opacity-70">
                   live recommender
                 </span>
@@ -159,8 +168,8 @@ function HeroUseCases() {
                 initial={{ opacity: 0, x: 4 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.15 }}
-                style={{ fontFamily: "'Space Mono', monospace", color: ACCENT }}
-                className="uppercase tracking-widest text-[11px]"
+                style={{ fontFamily: "'Space Mono', monospace" }}
+                className="uppercase tracking-widest text-[11px] text-primary"
               >
                 {selected.code}
               </motion.span>
@@ -168,8 +177,8 @@ function HeroUseCases() {
           </div>
 
           <div className="grid grid-cols-12">
-            <div className="col-span-12 md:col-span-7 border-r border-white/15 p-8 lg:p-12">
-              <div className="grid grid-cols-4 gap-3">
+            <div className="col-span-12 md:col-span-7 border-r border-background/15 p-8 lg:p-12">
+              <div className="grid max-sm:grid-cols-2 grid-cols-4 gap-3">
                 {useCases.map((u, i) => {
                   const active = useIdx === i;
                   return (
@@ -177,11 +186,11 @@ function HeroUseCases() {
                       key={u.code}
                       onMouseEnter={() => setUseIdx(i)}
                       onClick={() => setUseIdx(i)}
-                      style={{
-                        background: active ? ACCENT : "transparent",
-                        borderColor: active ? ACCENT : "rgba(255,255,255,0.18)",
-                      }}
-                      className="aspect-square border relative transition-colors duration-75 hover:border-white/60"
+                      className={`aspect-square border relative transition-colors duration-75 hover:border-background/60 cursor-pointer ${
+                        active
+                          ? "bg-primary border-primary"
+                          : "bg-transparent border-background/18"
+                      }`}
                     >
                       {u.shape(active)}
                       <span
@@ -191,11 +200,11 @@ function HeroUseCases() {
                         {u.code}
                       </span>
                       {active && (
-                        <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-white flex items-center justify-center">
+                        <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-foreground/90 flex items-center justify-center">
                           <CheckIcon
                             size={10}
                             strokeWidth={3}
-                            className="text-primary"
+                            className="text-background"
                           />
                         </span>
                       )}
@@ -238,7 +247,7 @@ function HeroUseCases() {
                 <span className="uppercase tracking-widest text-[10px] opacity-50">
                   Recomendação técnica
                 </span>
-                <ul className="mt-5 divide-y divide-white/15 border-y border-white/15">
+                <ul className="mt-5 divide-y divide-background/15 border-y border-background/15">
                   {selected.specs.map((s, i) => (
                     <motion.li
                       key={s}
@@ -258,7 +267,7 @@ function HeroUseCases() {
                 </ul>
               </div>
 
-              <button className="bg-primary hover:bg-white hover:text-black text-white px-6 py-4 uppercase tracking-widest text-[11px] flex items-center justify-between transition-colors duration-100">
+              <button className="bg-background hover:bg-primary hover:text-foreground/90 light:hover:text-background text-foreground/90 px-6 py-4 uppercase tracking-widest text-[11px] flex items-center justify-between transition-colors duration-100 cursor-pointer">
                 <span>Iniciar diagnóstico</span>
                 <ArrowUpRightIcon size={14} strokeWidth={1.6} />
               </button>
