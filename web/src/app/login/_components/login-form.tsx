@@ -62,7 +62,7 @@ export default function LoginForm() {
         style={{ fontFamily: "'Space Mono', monospace" }}
         className="bg-foreground text-background px-5 py-4 uppercase tracking-widest text-[12px] flex items-center justify-between hover:bg-primary transition-colors duration-100 mt-2 cursor-pointer dark:hover:text-foreground"
       >
-        <span>Entrar no Index</span>
+        <span>Entrar no Sistema</span>
         <ArrowRight size={14} strokeWidth={1.6} />
       </button>
     </form>
