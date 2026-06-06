@@ -1,0 +1,55 @@
+"use client";
+
+import { motion } from "motion/react";
+import Logo from "@/app/_components/logo";
+import SignupHeader from "./_components/signup-header";
+import SignupForm from "./_components/signup-form";
+import SignupFooterCta from "./_components/signup-footer-cta";
+import SignupSidePanel from "./_components/signup-side-panel";
+
+export default function Signup() {
+  return (
+    <div
+      className="min-h-screen w-full bg-background text-foreground transition-colors duration-200"
+      style={{ fontFamily: "'Inter Tight', sans-serif" }}
+    >
+      <SignupHeader />
+
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-12 min-h-[calc(100vh-66px)]">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="col-span-12 lg:col-span-7 lg:border-r border-border pr-0 lg:pr-16 py-12 lg:py-20 flex flex-col justify-center max-lg:mx-auto"
+        >
+          <div className="max-w-md w-full">
+            <Logo size="sm" />
+
+            <div className="mt-10 mb-8">
+              <h1
+                style={{
+                  fontFamily: "'Space Mono', monospace",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1,
+                }}
+                className="uppercase text-[clamp(32px,3.8vw,48px)] text-foreground"
+              >
+                Crie sua conta<span className="text-primary">.</span>
+              </h1>
+              <p className="mt-3 text-[13px] text-foreground/70 max-w-sm">
+                Nome, e-mail e senha pra começar. Depois você decide se faz o quiz
+                pra calibrar suas recomendações.
+              </p>
+            </div>
+
+            <SignupForm />
+
+            <SignupFooterCta />
+          </div>
+        </motion.section>
+
+        <SignupSidePanel />
+      </div>
+    </div>
+  );
+}
