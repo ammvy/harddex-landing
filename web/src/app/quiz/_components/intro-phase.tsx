@@ -49,11 +49,11 @@ export function IntroPhase({ onStart, onSkip }: IntroPhaseProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.4 }}
-      className="grid grid-cols-12 gap-8 lg:gap-12 items-start"
+      className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start"
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="col-span-12 lg:col-span-7"
+        className="w-full lg:flex-[7] min-w-0"
       >
         <div
           className="flex items-center gap-2 font-mono-brand"
@@ -120,7 +120,7 @@ export function IntroPhase({ onStart, onSkip }: IntroPhaseProps) {
         </div>
       </form>
 
-      <div className="col-span-12 lg:col-span-5">
+      <div className="w-full lg:flex-[5] min-w-0">
         <ProfilePreviewGrid />
       </div>
     </motion.div>

@@ -10,7 +10,11 @@ interface LevelSelectorProps {
   onSelect: () => void;
 }
 
-export function LevelSelector({ levelInfo, active, onSelect }: LevelSelectorProps) {
+export function LevelSelector({
+  levelInfo,
+  active,
+  onSelect,
+}: LevelSelectorProps) {
   return (
     <button
       type="button"
@@ -19,7 +23,7 @@ export function LevelSelector({ levelInfo, active, onSelect }: LevelSelectorProp
         "text-left p-5 border transition-all duration-150 cursor-pointer select-none",
         active
           ? "bg-foreground text-background border-primary"
-          : "bg-transparent text-foreground border-foreground/20 hover:border-primary"
+          : "bg-transparent text-foreground border-foreground/20 hover:border-primary",
       )}
     >
       <div
@@ -51,13 +55,13 @@ export function LevelSelector({ levelInfo, active, onSelect }: LevelSelectorProp
         className="mt-4 pt-3 border-t border-current/15 flex items-center justify-between font-mono-brand"
         style={{ fontFamily: "'Space Mono', monospace" }}
       >
-        <span className="uppercase tracking-widest text-[9px] opacity-50">
+        {/* <span className="uppercase tracking-widest text-[9px] opacity-50 flex lg:hidden xl:flex">
           duração
-        </span>
+        </span> */}
         <span
           className={cn(
-            "uppercase tracking-widest text-[10px]",
-            active ? "text-primary" : "text-foreground"
+            "uppercase tracking-widest text-[10px] text-nowrap",
+            active ? "text-primary" : "text-foreground",
           )}
         >
           {levelInfo.count}
