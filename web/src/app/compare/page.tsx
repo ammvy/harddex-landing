@@ -69,20 +69,8 @@ export default function ComparePage() {
           </p>
         </div>
 
-        {/* Controls Bar */}
-        <ControlsBar
-          category={category}
-          setCategory={setCategory}
-          detail={detail}
-          setDetail={setDetail}
-          profile={profile}
-          setProfile={setProfile}
-          profileOpen={profileOpen}
-          setProfileOpen={setProfileOpen}
-        />
-
         {/* Pickers */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+        <div className="mt-6 flex justify-between gap-4 items-center">
           <DevicePicker
             open={pickerA}
             onOpenChange={(openState) => {
@@ -94,16 +82,6 @@ export default function ComparePage() {
             onPick={setA}
             slot="A"
           />
-          <div className="hidden md:flex items-center justify-center">
-            <span
-              style={{
-                fontFamily: "'Space Mono', monospace",
-              }}
-              className="bg-primary text-primary-foreground uppercase tracking-widest text-[11px] px-3 py-1.5 font-bold"
-            >
-              VS
-            </span>
-          </div>
           <DevicePicker
             open={pickerB}
             onOpenChange={(openState) => {
@@ -114,22 +92,6 @@ export default function ComparePage() {
             value={b}
             onPick={setB}
             slot="B"
-          />
-        </div>
-
-        {/* Hero Cards */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HeroCard
-            device={a}
-            otherDevice={b}
-            profile={profile}
-            slotName="A"
-          />
-          <HeroCard
-            device={b}
-            otherDevice={a}
-            profile={profile}
-            slotName="B"
           />
         </div>
 

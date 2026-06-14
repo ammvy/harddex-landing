@@ -22,7 +22,7 @@ export function DevicePicker({
   slot,
 }: DevicePickerProps) {
   return (
-    <div className="relative">
+    <div className="relative flex-1">
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
