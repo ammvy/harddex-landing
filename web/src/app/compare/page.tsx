@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { DevicePicker } from "./_components/device-picker";
 import { SpecSection } from "./_components/spec-section";
 import { shouldShow } from "./_data/spec-builders";
+import AskMouse from "./_components/ask-mouse";
 
 export default function ComparePage() {
   const {
@@ -87,7 +88,7 @@ export default function ComparePage() {
         </div>
 
         {/* Spec Sections */}
-        <div className="mt-10 space-y-10">
+        <div className="my-10 space-y-10">
           {sections.map((sec) => {
             const visibleRows = sec.rows
               .filter((r) => shouldShow(r.level, detail))
@@ -106,6 +107,8 @@ export default function ComparePage() {
             );
           })}
         </div>
+
+        <AskMouse />
       </main>
     </div>
   );

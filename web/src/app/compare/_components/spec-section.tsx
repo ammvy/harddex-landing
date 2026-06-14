@@ -14,13 +14,13 @@ export function SpecSection({ sectionTitle, rows }: SpecSectionProps) {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         <h2
           style={{
             fontFamily: "'Space Mono', monospace",
             letterSpacing: "-0.02em",
           }}
-          className="uppercase text-[40px] leading-none text-foreground font-bold mt-4 pb-2"
+          className="uppercase text-[40px] leading-none text-foreground font-bold"
         >
           {sectionTitle}
         </h2>
