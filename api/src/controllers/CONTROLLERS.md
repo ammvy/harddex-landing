@@ -5,14 +5,16 @@ A camada de **Controllers (Controladores)** atua como a ponte de comunicação e
 ---
 
 ## 👥 Responsáveis no Projeto
-*   **Implementação e Manutenção**: **Ana** (Controllers/Routes)
-*   **Tech Lead / Integração**: **Victor** (Amarrar front e back)
+
+- **Implementação e Manutenção**: **Ana** (Controllers/Routes)
+- **Tech Lead / Integração**: **Victor** (Amarrar front e back)
 
 ---
 
 ## 🎯 Função e Responsabilidades
 
 Sua principal função é receber dados de transporte, delegar o processamento para as regras de negócio e formatar a resposta para o cliente. Ela executa:
+
 1.  **Extração de Parâmetros**: Lê dados de URL (`req.params`), corpo da requisição (`req.body`), cabeçalhos de autenticação e uploads de arquivos (`req.file` ou `req.parts`).
 2.  **Validação e Adaptação**: Garante que os formatos de transporte coincidam com o que a camada de serviços espera, efetuando adaptações básicas se necessário.
 3.  **Invocação de Serviços**: Invoca os métodos adequados do **Service** injetado para que a regra de negócio seja executada.
@@ -51,8 +53,10 @@ export class UserController {
 ## 🔄 Interações e Acoplamento
 
 ### ⬆️ Camada Superior (Routes)
-*   **Como interage**: A camada de **Routes** (mantida por **Maranhão**) mapeia URLs e métodos HTTP diretamente para os métodos públicos de uma instância do controlador.
+
+- **Como interage**: A camada de **Routes** (mantida por **Ana**) mapeia URLs e métodos HTTP diretamente para os métodos públicos de uma instância do controlador.
 
 ### ⬇️ Camada Inferior (Services)
-*   **Como interage**: O Controller injeta uma interface ou instância do **Service** (mantida por **Mariana**) e chama suas funções assíncronas para processar as regras de negócio. O controlador *nunca* deve fazer chamadas diretas ao banco de dados ou executar validações que não sejam estritamente ligadas a transporte HTTP.
-*   **Exemplo**: O `UserController` chama `await this.userService.create(data)` e aguarda o objeto de retorno.
+
+- **Como interage**: O Controller injeta uma interface ou instância do **Service** (mantida por **Mariana**) e chama suas funções assíncronas para processar as regras de negócio. O controlador _nunca_ deve fazer chamadas diretas ao banco de dados ou executar validações que não sejam estritamente ligadas a transporte HTTP.
+- **Exemplo**: O `UserController` chama `await this.userService.create(data)` e aguarda o objeto de retorno.
