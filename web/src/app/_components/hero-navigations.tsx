@@ -57,7 +57,6 @@ function HeroNavigations() {
           return (
             <motion.a
               key={c.title}
-              href="#"
               whileHover={{ y: -6 }}
               transition={{ duration: 0.15 }}
               className={cn(
