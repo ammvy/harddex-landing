@@ -20,12 +20,12 @@ export function MouseAvatar({ tdu, isAnimating }: MouseAvatarProps) {
           return CatComponent ? <CatComponent /> : null;
         })()}
       </div>
-      <div
+      {/* <div
         style={{ fontFamily: "'Space Mono', monospace" }}
         className="uppercase tracking-widest text-[9px] bg-foreground text-background px-2 py-0.5 font-bold"
       >
         Mouse Bot
-      </div>
+      </div> */}
     </div>
   );
 }
