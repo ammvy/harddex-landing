@@ -58,3 +58,9 @@
     line-height: 1.5;
   }
 }
+
+@layer utilities {
+  .font-mono-brand {
+    font-family: 'Space Mono', monospace;
+  }
+}

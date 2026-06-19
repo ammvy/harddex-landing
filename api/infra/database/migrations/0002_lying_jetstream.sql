@@ -1,0 +1,2 @@
+ALTER TABLE "components" ALTER COLUMN "specification" SET DATA TYPE jsonb USING CASE WHEN "specification" IS NULL THEN NULL ELSE jsonb_build_object('raw', "specification") END;--> statement-breakpoint
+ALTER TABLE "components" ADD COLUMN "description" text;

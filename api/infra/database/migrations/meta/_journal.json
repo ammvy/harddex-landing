@@ -15,6 +15,20 @@
       "when": 1780591595866,
       "tag": "0001_light_the_enforcers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781289869429,
+      "tag": "0002_lying_jetstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781906048525,
+      "tag": "0003_sticky_human_fly",
+      "breakpoints": true
     }
   ]
 }

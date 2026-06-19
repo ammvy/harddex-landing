@@ -6,10 +6,10 @@ export const userStyleEnum = pgEnum("user_style_enum", [
   "ADVANCED",
   "GAMER",
   "PROFESSIONAL",
-  "Remote work",
-  "File / Media",
-  "Mobility",
-  "Light travel",
+  "REMOTE WORK",
+  "FILE / MEDIA",
+  "MOBILITY",
+  "LIGHT TRAVEL",
 ]);
 
 export const permissionEnum = pgEnum("permission_enum", [

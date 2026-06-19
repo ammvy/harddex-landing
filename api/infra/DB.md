@@ -1,32 +1,38 @@
-# Infraestrutura (`api/infra`)
+# 🏗️ Infraestrutura & Banco de Dados (`api/infra`)
 
-Camada responsável por toda a infraestrutura externa da API: banco de dados, ORM e serviços de terceiros.
+Camada responsável por toda a infraestrutura física e de persistência externa da API: containerização (Docker), banco de dados relacional, ORM (Drizzle), conexão física e serviços de armazenamento em nuvem (Firebase).
 
 ---
 
-## Estrutura
+## 👥 Responsáveis no Projeto
+*   **Modelagem, Drizzle & Docker**: **Mirela** (Estruturação do Banco de Dados e Líder Interno)
+*   **Integração e Orquestração Geral**: **Victor** (Tech Lead)
+
+---
+
+## 📁 Estrutura de Diretórios da Infraestrutura
 
 ```
 infra/
-├── docker-compose.yml        # PostgreSQL 16 + Firebase Emulator
+├── docker-compose.yml        # PostgreSQL 16 + Firebase Emulator (Containers local)
 ├── package.json
 ├── database/
 │   ├── connection.ts          # Factory de conexão Drizzle + pg.Pool
 │   └── models/
-│       ├── index.ts           # Barrel export dos schemas
-│       └── user.schema.ts     # Schema da tabela "users"
+│       ├── index.ts           # Barrel export dos schemas do banco
+│       └── user.schema.ts     # Schema e definição de tabela do Drizzle
 └── firebase/
     ├── admin.ts               # Inicialização do Firebase Admin SDK
-    └── storage.ts             # Adaptador do Firebase Storage
+    └── storage.ts             # Adaptador de integração para upload de arquivos
 ```
 
 ---
 
-## Banco de Dados / ORM (Drizzle)
+## 🗄️ Banco de Dados / ORM (Drizzle)
 
 ### Conexão (`database/connection.ts`)
 
-Cria e exporta a instância do Drizzle ORM conectada ao PostgreSQL via `pg.Pool`.
+Cria e exporta a instância do Drizzle ORM conectada ao PostgreSQL via `pg.Pool`, estabelecendo o connection pooling ideal para a API Fastify.
 
 ```ts
 createDatabase(connectionString: string): NodePgDatabase<any>
@@ -34,7 +40,7 @@ createDatabase(connectionString: string): NodePgDatabase<any>
 
 ### Models (`database/models/`)
 
-Cada arquivo `*.schema.ts` define **uma tabela** do PostgreSQL usando a API do Drizzle.
+Cada arquivo `*.schema.ts` define **uma tabela** do PostgreSQL usando a API do Drizzle, servindo de base tanto para a criação física das tabelas quanto para a tipagem dos dados na API.
 
 #### `user.schema.ts` — Tabela `users`
 
@@ -57,7 +63,7 @@ Cada arquivo `*.schema.ts` define **uma tabela** do PostgreSQL usando a API do D
 
 ---
 
-## Comandos Drizzle & Setup
+## ⚡ Comandos Drizzle & Setup (Desenvolvimento)
 
 ### Configuração (`api/drizzle.config.ts`)
 
@@ -85,16 +91,16 @@ cd api
 | Comando | Script | O que faz |
 |---------|--------|-----------|
 | `pnpm db:generate` | `drizzle-kit generate` | Lê os schemas e gera arquivos SQL de migração em `infra/database/migrations/`. |
-| `pnpm db:migrate` | `drizzle-kit migrate` | Aplica as migrações pendentes no banco de dados. |
-| `pnpm db:push` | `drizzle-kit push` | Sincroniza o schema direto no banco **sem gerar arquivos de migração** (útil em dev). |
+| `pnpm db:migrate` | `drizzle-kit migrate` | Aplica as migrações SQL pendentes no banco de dados. |
+| `pnpm db:push` | `drizzle-kit push` | Sincroniza o schema direto no banco **sem gerar arquivos de migração** (útil em dev local). |
 | `pnpm db:studio` | `drizzle-kit studio` | Abre o Drizzle Studio (GUI web) para visualizar e editar dados no navegador. |
-| `pnpm docker:up` | `docker compose ... up -d` | Sobe os containers (PostgreSQL + Firebase Emulator). |
-| `pnpm docker:down` | `docker compose ... down` | Derruba os containers. |
+| `pnpm docker:up` | `docker compose -f ./infra/docker-compose.yml up -d` | Sobe os containers (PostgreSQL + Firebase Emulator). |
+| `pnpm docker:down` | `docker compose -f ./infra/docker-compose.yml down` | Derruba os containers. |
 
 ### Fluxo típico de setup (primeira vez)
 
 ```bash
-# 1. Suba o banco de dados
+# 1. Suba o banco de dados e emulador
 pnpm docker:up
 
 # 2. Sincronize o schema no banco (dev rápido)
@@ -104,46 +110,19 @@ pnpm db:push
 pnpm db:studio
 ```
 
-### Fluxo de migração (produção / equipe)
-
-```bash
-# 1. Altere ou crie um arquivo *.schema.ts em infra/database/models/
-
-# 2. Gere a migração SQL
-pnpm db:generate
-
-# 3. Aplique no banco
-pnpm db:migrate
-```
-
-### Dependências relevantes
-
-| Pacote | Onde | Papel |
-|--------|------|-------|
-| `drizzle-orm` | `dependencies` | Runtime do ORM (queries, tipos) |
-| `drizzle-kit` | `devDependencies` | CLI de migrações, push e studio |
-| `pg` | `dependencies` | Driver PostgreSQL para Node.js |
-| `dotenv` | `dependencies` | Carrega `DATABASE_URL` do `.env` |
-
 ---
 
-## Docker (`docker-compose.yml`)
+## 🐳 Docker (`docker-compose.yml`)
 
 | Serviço      | Imagem                      | Porta(s) exposta(s)                   |
 |--------------|-----------------------------|---------------------------------------|
 | `postgres`   | `postgres:16-alpine`        | `5433 → 5432`                         |
 | `firebase`   | `spine3/firebase-emulator`  | `4000`, `9099`, `8080`, `9199`, etc.  |
 
-Subir os containers:
-
-```bash
-cd api/infra
-docker compose up -d
-```
-
 ---
 
-## Firebase (`firebase/`)
+## 🔥 Firebase (`firebase/`)
 
-- **`admin.ts`** — Inicializa o Firebase Admin SDK.
-- **`storage.ts`** — Adaptador para upload/download de arquivos no Firebase Storage.
+Utilizado para a gestão e armazenamento de arquivos de mídia (como avatares dos perfis de usuário).
+*   **`admin.ts`** — Inicializa o Firebase Admin SDK utilizando a service account do emulador ou de produção.
+*   **`storage.ts`** — Adaptador com métodos utilitários para fazer o upload e remoção de mídias direto no bucket.
