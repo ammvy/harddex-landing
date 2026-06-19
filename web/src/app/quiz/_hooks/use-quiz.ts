@@ -20,12 +20,12 @@ export function useQuiz() {
 
   const scores = useMemo(() => {
     const s: Record<ProfileId, number> = {
-      gamer: 0,
-      pro: 0,
-      study: 0,
-      creative: 0,
-      dev: 0,
-      mobile: 0,
+      GAMER: 0,
+      PRO: 0,
+      STUDY: 0,
+      CREATIVE: 0,
+      DEV: 0,
+      MOBILE: 0,
     };
     Object.entries(answers).forEach(([qid, oi]) => {
       const q = QUESTIONS.find((x) => x.id === qid);
@@ -44,7 +44,7 @@ export function useQuiz() {
     );
   }, [scores]);
 
-  const winner = ranking[0]?.[0] || "pro";
+  const winner = ranking[0]?.[0] || "PRO";
   const winnerTotal = ranking.reduce((acc, [, v]) => acc + v, 0) || 1;
 
   const startQuiz = (selectedLevel: Level) => {
