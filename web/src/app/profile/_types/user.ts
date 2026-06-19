@@ -1,8 +1,11 @@
+import { ProfileId } from "@/components/mouse";
+
+export type UserPermissionEnum = "ADMIN" | "USER" | "CURATOR";
+
 export interface User {
-  tdu: string;
+  id: string;
   name: string;
   email: string;
-  bio: string;
-  joined: string;
-  photo: string;
+  style: ProfileId;
+  permission: UserPermissionEnum;
 }
