@@ -1,8 +1,15 @@
 import { useState, useMemo } from "react";
-import { Category, Detail, ProfileId, Device, PhoneSpecs, LaptopSpecs } from "../_data/types";
+import {
+  Category,
+  Detail,
+  Device,
+  PhoneSpecs,
+  LaptopSpecs,
+} from "../_data/types";
 import { PHONES } from "../_data/phones";
 import { LAPTOPS } from "../_data/laptops";
 import { buildPhoneRows, buildLaptopRows } from "../_data/spec-builders";
+import { ProfileId } from "@/components/mouse";
 
 export function useCompare() {
   const [category, setCategory] = useState<Category>("phone");

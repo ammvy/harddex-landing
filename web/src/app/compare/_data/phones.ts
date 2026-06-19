@@ -9,7 +9,7 @@ export const PHONES: Device<PhoneSpecs>[] = [
     year: 2026,
     price: 6499,
     overall: 91,
-    tdu: { gamer: 94, mobile: 84, creative: 89, pro: 82, study: 74, dev: 70 },
+    tdu: { GAMER: 94, MOBILE: 84, CREATIVE: 89, PRO: 82, STUDY: 74, DEV: 70 },
     accent: "#3D7FFF",
     specs: {
       cpu: "Cipher X3 Ultra",
@@ -51,7 +51,7 @@ export const PHONES: Device<PhoneSpecs>[] = [
     year: 2026,
     price: 5299,
     overall: 87,
-    tdu: { creative: 90, pro: 86, mobile: 84, gamer: 82, study: 78, dev: 72 },
+    tdu: { CREATIVE: 90, PRO: 86, MOBILE: 84, GAMER: 82, STUDY: 78, DEV: 72 },
     accent: "#9D7FFF",
     specs: {
       cpu: "Halo H8",
