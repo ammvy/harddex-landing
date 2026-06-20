@@ -5,16 +5,20 @@ export const paramIdDTO = z.object({
 });
 
 export const createReviewDTO = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(255),
-  color: z.string().max(50).optional(),
+  rating: z.number().min(0).max(5),
+  comment: z.string().optional().nullable(),
+  userId: z.number().int().positive(),
+  productId: z.number().int().positive(),
 });
 
 export type CreateReviewInput = z.infer<typeof createReviewDTO>;
 
 export const ReviewDTO = z.object({
   id: z.number(),
-  name: z.string(),
-  color: z.string().nullable().optional(),
+  rating: z.number(),
+  comment: z.string().nullable(),
+  userId: z.number(),
+  productId: z.number(),
 });
 
 export const reviewSuccessResponseDTO = z.object({

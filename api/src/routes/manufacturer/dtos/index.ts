@@ -6,7 +6,6 @@ export const paramIdDTO = z.object({
 
 export const createManufacturerDTO = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(255),
-  color: z.string().max(50).optional(),
 });
 
 export type CreateManufacturerInput = z.infer<typeof createManufacturerDTO>;
@@ -14,7 +13,6 @@ export type CreateManufacturerInput = z.infer<typeof createManufacturerDTO>;
 export const ManufacturerDTO = z.object({
   id: z.number(),
   name: z.string(),
-  color: z.string().nullable().optional(),
 });
 
 export const manufacturerSuccessResponseDTO = z.object({
