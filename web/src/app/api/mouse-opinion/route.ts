@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Device, ProfileId } from "../../compare/_data/types";
+import { Device } from "../../compare/_data/types";
 import { PROFILE_LABELS } from "../../compare/_data/profiles";
 import { getSpecsSummary } from "./specs-formatter";
 import { generateSmartFallbackText } from "./fallback-generator";
 import { createGeminiStream } from "./gemini-stream";
+import { ProfileId } from "@/components/mouse";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
     if (!deviceA || !deviceB || !tdu) {
       return NextResponse.json(
         { error: "Parâmetros deviceA, deviceB e tdu são obrigatórios." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -66,7 +67,7 @@ Instruções importantes:
       } catch (geminiError) {
         console.warn(
           "Falha ao chamar a API do Gemini. Usando fallback inteligente local...",
-          geminiError
+          geminiError,
         );
       }
     }
@@ -108,7 +109,7 @@ Instruções importantes:
     console.error("Erro no manipulador API Mouse Opinion:", err);
     return NextResponse.json(
       { error: err.message || "Erro interno do servidor." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

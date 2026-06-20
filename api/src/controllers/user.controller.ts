@@ -2,6 +2,9 @@ import type { IUserService } from "@/services/user/user.service.interface";
 import type { HttpRequest, HttpResponse } from "@/interfaces/http";
 import {
   createUserDTO,
+  authenticateUserDTO,
+  requestPasswordResetDTO,
+  resetPasswordDTO,
   updateUserDTO,
   paramIdDTO,
 } from "@/routes/user/dtos/user.schema";
@@ -24,6 +27,24 @@ export class UserController {
     const data = createUserDTO.parse(req.body);
     const user = await this.service.create({ data });
     return { statusCode: 201, body: { success: true, data: user } };
+  }
+
+  async authenticate(req: HttpRequest): Promise<HttpResponse> {
+    const data = authenticateUserDTO.parse(req.body);
+    const user = await this.service.authenticate(data);
+    return { statusCode: 200, body: { success: true, data: user } };
+  }
+
+  async requestPasswordReset(req: HttpRequest): Promise<HttpResponse> {
+    const data = requestPasswordResetDTO.parse(req.body);
+    const user = await this.service.requestPasswordReset(data);
+    return { statusCode: 200, body: { success: true, data: user } };
+  }
+
+  async resetPassword(req: HttpRequest): Promise<HttpResponse> {
+    const data = resetPasswordDTO.parse(req.body);
+    const user = await this.service.resetPassword(data);
+    return { statusCode: 200, body: { success: true, data: user } };
   }
 
   async update(req: HttpRequest): Promise<HttpResponse> {

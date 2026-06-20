@@ -1,11 +1,20 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Pencil } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 
-interface ProfileHeaderTitleProps {}
+interface ProfileHeaderTitleProps {
+  isEditing: boolean;
+  onStartEdit: () => void;
+  onCancelEdit: () => void;
+  onSubmit: () => void;
+}
 
-export default function ProfileHeaderTitle({}: ProfileHeaderTitleProps) {
+export default function ProfileHeaderTitle({
+  isEditing,
+  onStartEdit,
+  onCancelEdit,
+}: ProfileHeaderTitleProps) {
   const Mono = { fontFamily: "'Space Mono', monospace" } as const;
 
   return (
@@ -30,13 +39,37 @@ export default function ProfileHeaderTitle({}: ProfileHeaderTitleProps) {
         </h1>
       </div>
 
+      {isEditing && (
+        <button
+          onClick={isEditing ? onCancelEdit : onStartEdit}
+          style={Mono}
+          className={`ml-auto px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer bg-primary/10 text-primary border border-primary hover:bg-primary hover:text-white`}
+        >
+          <Pencil size={13} strokeWidth={1.8} />
+          Salvar perfil
+        </button>
+      )}
+
       <button
-        // onClick={startEdit}
+        onClick={isEditing ? onCancelEdit : onStartEdit}
         style={Mono}
-        className="bg-foreground text-background px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 hover:bg-primary hover:text-primary-foreground transition-colors duration-100 cursor-pointer"
+        className={`px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer ${
+          isEditing
+            ? "bg-destructive/10 text-destructive border border-destructive hover:bg-destructive hover:text-white"
+            : "bg-foreground text-background hover:bg-primary hover:text-primary-foreground"
+        }`}
       >
-        <Pencil size={13} strokeWidth={1.8} />
-        Editar perfil
+        {isEditing ? (
+          <>
+            <X size={13} strokeWidth={1.8} />
+            Cancelar
+          </>
+        ) : (
+          <>
+            <Pencil size={13} strokeWidth={1.8} />
+            Editar perfil
+          </>
+        )}
       </button>
     </motion.div>
   );

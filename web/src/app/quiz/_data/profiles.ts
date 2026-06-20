@@ -1,7 +1,7 @@
 import { ProfileId, ProfileInfo } from "./types";
 
 export const PROFILES: Record<ProfileId, ProfileInfo> = {
-  gamer: {
+  GAMER: {
     code: "P-01",
     label: "Gamer",
     tag: "Desempenho em jogos",
@@ -14,7 +14,7 @@ export const PROFILES: Record<ProfileId, ProfileInfo> = {
       "SSD NVMe 1 TB+",
     ],
   },
-  pro: {
+  PRO: {
     code: "P-02",
     label: "Produtividade",
     tag: "Trabalho remoto & multitarefa",
@@ -27,7 +27,7 @@ export const PROFILES: Record<ProfileId, ProfileInfo> = {
       "Bateria e uptime confiáveis",
     ],
   },
-  study: {
+  STUDY: {
     code: "P-03",
     label: "Estudo",
     tag: "Aulas, leitura e pesquisa",
@@ -40,7 +40,7 @@ export const PROFILES: Record<ProfileId, ProfileInfo> = {
       "Bateria 8 h+",
     ],
   },
-  creative: {
+  CREATIVE: {
     code: "P-04",
     label: "Criativo",
     tag: "Edição, render e design",
@@ -53,7 +53,7 @@ export const PROFILES: Record<ProfileId, ProfileInfo> = {
       "SSD 2 TB NVMe + HD secundário",
     ],
   },
-  dev: {
+  DEV: {
     code: "P-05",
     label: "Dev",
     tag: "Código, containers e VMs",
@@ -66,7 +66,7 @@ export const PROFILES: Record<ProfileId, ProfileInfo> = {
       "Compatibilidade Linux validada",
     ],
   },
-  mobile: {
+  MOBILE: {
     code: "P-06",
     label: "Mobilidade",
     tag: "Portabilidade & bateria",

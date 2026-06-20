@@ -15,7 +15,7 @@ export function getSpecsSummary(device: Device, category: string): string {
 - Conectividade: ${specs.wifi}, Bluetooth ${specs.bt}
 - Preço: R$ ${device.price.toLocaleString("pt-BR")}
 - Pontuação Geral: ${device.overall}/100
-- Adequação para o Perfil: ${device.tdu.gamer ?? 50}% Gamer, ${device.tdu.pro ?? 50}% Produtividade, ${device.tdu.study ?? 50}% Estudo, ${device.tdu.creative ?? 50}% Criativo, ${device.tdu.dev ?? 50}% Dev, ${device.tdu.mobile ?? 50}% Mobilidade
+- Adequação para o Perfil: ${device.tdu.GAMER ?? 50}% Gamer, ${device.tdu.PRO ?? 50}% Produtividade, ${device.tdu.STUDY ?? 50}% Estudo, ${device.tdu.CREATIVE ?? 50}% Criativo, ${device.tdu.DEV ?? 50}% Dev, ${device.tdu.MOBILE ?? 50}% Mobilidade
 `;
   } else {
     return `
@@ -31,7 +31,7 @@ export function getSpecsSummary(device: Device, category: string): string {
 - Conectividade: ${specs.wifi}, Bluetooth ${specs.bt}
 - Preço: R$ ${device.price.toLocaleString("pt-BR")}
 - Pontuação Geral: ${device.overall}/100
-- Adequação para o Perfil: ${device.tdu.gamer ?? 50}% Gamer, ${device.tdu.pro ?? 50}% Produtividade, ${device.tdu.study ?? 50}% Estudo, ${device.tdu.creative ?? 50}% Criativo, ${device.tdu.dev ?? 50}% Dev, ${device.tdu.mobile ?? 50}% Mobilidade
+- Adequação para o Perfil: ${device.tdu.GAMER ?? 50}% Gamer, ${device.tdu.PRO ?? 50}% Produtividade, ${device.tdu.STUDY ?? 50}% Estudo, ${device.tdu.CREATIVE ?? 50}% Criativo, ${device.tdu.DEV ?? 50}% Dev, ${device.tdu.MOBILE ?? 50}% Mobilidade
 `;
   }
 }

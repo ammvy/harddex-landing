@@ -9,7 +9,7 @@ export const LAPTOPS: Device<LaptopSpecs>[] = [
     year: 2026,
     price: 18999,
     overall: 92,
-    tdu: { gamer: 95, creative: 90, dev: 84, pro: 78, study: 64, mobile: 48 },
+    tdu: { GAMER: 95, CREATIVE: 90, DEV: 84, PRO: 78, STUDY: 64, MOBILE: 48 },
     accent: "#3D7FFF",
     specs: {
       cpu: "Cipher CX-14 HX",
@@ -55,7 +55,7 @@ export const LAPTOPS: Device<LaptopSpecs>[] = [
     year: 2026,
     price: 14299,
     overall: 88,
-    tdu: { creative: 94, pro: 86, dev: 80, gamer: 74, study: 72, mobile: 64 },
+    tdu: { CREATIVE: 94, PRO: 86, DEV: 80, GAMER: 74, STUDY: 72, MOBILE: 64 },
     accent: "#9D7FFF",
     specs: {
       cpu: "Halo HX-12",

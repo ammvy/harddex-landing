@@ -1,14 +1,28 @@
 "use client";
 
 import { motion } from "motion/react";
+import { UseFormRegisterReturn } from "react-hook-form";
 import { Mail, UserStar, ChessQueen } from "lucide-react";
 import { User } from "../_types";
+import EditableField from "./editable-field";
 
 interface ProfileFieldsProps {
   user: User;
+  isEditing: boolean;
+  register: UseFormRegisterReturn;
+  error?: string;
+  onCancelEdit: () => void;
+  onSubmit: () => void;
 }
 
-export default function ProfileFields({ user }: ProfileFieldsProps) {
+export default function ProfileFields({
+  user,
+  isEditing,
+  register,
+  error,
+  onCancelEdit,
+  onSubmit,
+}: ProfileFieldsProps) {
   const Mono = { fontFamily: "'Space Mono', monospace" } as const;
 
   return (
@@ -26,9 +40,14 @@ export default function ProfileFields({ user }: ProfileFieldsProps) {
         >
           Nome completo
         </div>
-        <div className="text-[20px] sm:text-[22px] font-medium text-foreground">
-          {user.name}
-        </div>
+        <EditableField
+          value={user.name}
+          isEditing={isEditing}
+          register={register}
+          error={error}
+          onCancel={onCancelEdit}
+          onSubmit={onSubmit}
+        />
       </div>
 
       {/* Email (read-only) */}

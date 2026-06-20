@@ -1,5 +1,7 @@
 import { ProfileId } from "@/components/mouse";
 
+export type { ProfileId };
+
 export type Level = 1 | 2 | 3;
 
 export type Weights = Partial<Record<ProfileId, number>>;

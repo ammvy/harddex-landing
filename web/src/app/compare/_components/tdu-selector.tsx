@@ -9,8 +9,19 @@ interface TduSelectorProps {
   disabled: boolean;
 }
 
-export function TduSelector({ selectedTdu, onTduChange, disabled }: TduSelectorProps) {
-  const profiles: ProfileId[] = ["gamer", "pro", "study", "creative", "dev", "mobile"];
+export function TduSelector({
+  selectedTdu,
+  onTduChange,
+  disabled,
+}: TduSelectorProps) {
+  const profiles: ProfileId[] = [
+    "CREATIVE",
+    "DEV",
+    "GAMER",
+    "MOBILE",
+    "PRO",
+    "STUDY",
+  ];
 
   return (
     <div className="p-4 bg-muted/20">

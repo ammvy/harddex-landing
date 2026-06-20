@@ -1,10 +1,10 @@
-import { ProfileId } from "./types";
+import { ProfileId } from "@/components/mouse";
 
 export const PROFILE_LABELS: Record<ProfileId, string> = {
-  gamer: "Gamer",
-  pro: "Produtividade",
-  study: "Estudo",
-  creative: "Criativo",
-  dev: "Dev",
-  mobile: "Mobilidade",
+  GAMER: "Gamer",
+  PRO: "Produtividade",
+  STUDY: "Estudo",
+  CREATIVE: "Criativo",
+  DEV: "Dev",
+  MOBILE: "Mobilidade",
 };

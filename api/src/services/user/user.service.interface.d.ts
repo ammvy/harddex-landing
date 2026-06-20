@@ -5,6 +5,9 @@ export interface IUserService {
   getAll(): Promise<UserSelect[]>;
   getById({ id }: { id: number }): Promise<UserSelect>;
   getByEmail({ email }: { email: string }): Promise<UserSelect>;
+  authenticate({ email, password }: { email: string; password: string }): Promise<UserSelect>;
+  requestPasswordReset({ email }: { email: string }): Promise<UserSelect>;
+  resetPassword({ email, password }: { email: string; password: string }): Promise<UserSelect>;
   create({ data }: { data: CreateUserInput }): Promise<UserSelect>;
   update({ id, data }: { id: number; data: UpdateUserInput }): Promise<UserSelect>;
   delete({ id }: { id: number }): Promise<void>;

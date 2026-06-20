@@ -1,3 +1,4 @@
 packages:
-  - 'api'
-  - 'infra'
+  - "api"
+  - "infra"
+  - "web"
