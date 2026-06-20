@@ -2,7 +2,6 @@ import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
 import { errorResponseDTO, paramIdDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { adaptRoute } from "@/adapters/fastify-route-adapter";
 import z from "zod";
 
 export function deleteUserRoute({
@@ -24,7 +23,7 @@ export function deleteUserRoute({
           },
         },
       },
-      adaptRoute(controller.delete.bind(controller)),
+      controller.delete.bind(controller),
     );
   };
 }
