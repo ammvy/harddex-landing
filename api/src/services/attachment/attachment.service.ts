@@ -1,7 +1,7 @@
 import { IAttachmentDAO } from '@/dao/attachment/attachment.dao.interface';
-import type { IAttachmentService } from './attachment.service.interface';
+import type { AttachmentCreateInput, AttachmentUpdateInput, IAttachmentService } from './attachment.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { AttachmentInsert, AttachmentSelect } from '@infra/database/models/attachment.schema';
+import type { AttachmentSelect } from '@infra/database/models/attachment.schema';
 
 export class AttachmentService implements IAttachmentService {
   constructor(private readonly dao: IAttachmentDAO) {}
@@ -16,11 +16,11 @@ export class AttachmentService implements IAttachmentService {
     return item;
   }
 
-  async create({ data }: { data: AttachmentInsert }): Promise<AttachmentSelect> {
+  async create({ data }: { data: AttachmentCreateInput }): Promise<AttachmentSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: Partial<AttachmentInsert> }): Promise<AttachmentSelect> {
+  async update({ id, data }: { id: number; data: AttachmentUpdateInput }): Promise<AttachmentSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Attachment', String(id));
     return item;

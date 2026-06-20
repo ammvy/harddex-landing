@@ -1,7 +1,7 @@
 import { IBrandDAO } from '@/dao/brand/brand.dao.interface';
-import type { IBrandService } from './brand.service.interface';
+import type { BrandCreateInput, BrandUpdateInput, IBrandService } from './brand.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { BrandInsert, BrandSelect } from '@infra/database/models/brand.schema';
+import type { BrandSelect } from '@infra/database/models/brand.schema';
 
 export class BrandService implements IBrandService {
   constructor(private readonly dao: IBrandDAO) {}
@@ -16,11 +16,11 @@ export class BrandService implements IBrandService {
     return item;
   }
 
-  async create({ data }: { data: BrandInsert }): Promise<BrandSelect> {
+  async create({ data }: { data: BrandCreateInput }): Promise<BrandSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: Partial<BrandInsert> }): Promise<BrandSelect> {
+  async update({ id, data }: { id: number; data: BrandUpdateInput }): Promise<BrandSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Brand', String(id));
     return item;

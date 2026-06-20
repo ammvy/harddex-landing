@@ -1,7 +1,7 @@
 import { IProductDAO } from '@/dao/product/product.dao.interface';
-import type { IProductService } from './product.service.interface';
+import type { ProductCreateInput, ProductUpdateInput, IProductService } from './product.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { ProductInsert, ProductSelect } from '@infra/database/models/product.schema';
+import type { ProductSelect } from '@infra/database/models/product.schema';
 
 export class ProductService implements IProductService {
   constructor(private readonly dao: IProductDAO) {}
@@ -16,11 +16,11 @@ export class ProductService implements IProductService {
     return item;
   }
 
-  async create({ data }: { data: ProductInsert }): Promise<ProductSelect> {
+  async create({ data }: { data: ProductCreateInput }): Promise<ProductSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: Partial<ProductInsert> }): Promise<ProductSelect> {
+  async update({ id, data }: { id: number; data: ProductUpdateInput }): Promise<ProductSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Product', String(id));
     return item;

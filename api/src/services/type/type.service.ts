@@ -1,7 +1,7 @@
 import { ITypeDAO } from '@/dao/type/type.dao.interface';
-import type { ITypeService } from './type.service.interface';
+import type { ITypeService, TypeCreateInput, TypeUpdateInput } from './type.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { TypeInsert, TypeSelect } from '@infra/database/models/type.schema';
+import type { TypeSelect } from '@infra/database/models/type.schema';
 
 export class TypeService implements ITypeService {
   constructor(private readonly dao: ITypeDAO) {}
@@ -16,11 +16,11 @@ export class TypeService implements ITypeService {
     return item;
   }
 
-  async create({ data }: { data: TypeInsert }): Promise<TypeSelect> {
+  async create({ data }: { data: TypeCreateInput }): Promise<TypeSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: Partial<TypeInsert> }): Promise<TypeSelect> {
+  async update({ id, data }: { id: number; data: TypeUpdateInput }): Promise<TypeSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Type', String(id));
     return item;

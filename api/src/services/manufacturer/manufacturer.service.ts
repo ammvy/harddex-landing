@@ -1,7 +1,7 @@
 import { IManufacturerDAO } from '@/dao/manufacturer/manufacturer.dao.interface';
-import type { IManufacturerService } from './manufacturer.service.interface';
+import type { ManufacturerCreateInput, ManufacturerUpdateInput, IManufacturerService } from './manufacturer.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { ManufacturerInsert, ManufacturerSelect } from '@infra/database/models/manufacturer.schema';
+import type { ManufacturerSelect } from '@infra/database/models/manufacturer.schema';
 
 export class ManufacturerService implements IManufacturerService {
   constructor(private readonly dao: IManufacturerDAO) {}
@@ -16,11 +16,11 @@ export class ManufacturerService implements IManufacturerService {
     return item;
   }
 
-  async create({ data }: { data: ManufacturerInsert }): Promise<ManufacturerSelect> {
+  async create({ data }: { data: ManufacturerCreateInput }): Promise<ManufacturerSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: Partial<ManufacturerInsert> }): Promise<ManufacturerSelect> {
+  async update({ id, data }: { id: number; data: ManufacturerUpdateInput }): Promise<ManufacturerSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Manufacturer', String(id));
     return item;

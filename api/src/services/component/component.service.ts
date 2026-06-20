@@ -1,7 +1,7 @@
 import { IComponentDAO } from '@/dao/component/component.dao.interface';
 import type { ComponentCreateInput, ComponentUpdateInput, IComponentService } from './component.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { ComponentInsert, ComponentSelect } from '@infra/database/models/component.schema';
+import type { ComponentSelect } from '@infra/database/models/component.schema';
 
 export class ComponentService implements IComponentService {
   constructor(private readonly dao: IComponentDAO) {}

@@ -1,7 +1,16 @@
-import type { ComponentInsert, ComponentSelect } from '@infra/database/models/component.schema';
+import type { ComponentSelect } from '@infra/database/models/component.schema';
 
-export type ComponentCreateInput = ComponentInsert;
-export type ComponentUpdateInput = Partial<ComponentInsert>;
+export type ComponentCreateInput = {
+  name: string;
+  specification?: unknown;
+  description?: string | null;
+  averagePrice?: number | null;
+  productId: number;
+  typeId?: number | null;
+  manufacturerId?: number | null;
+};
+
+export type ComponentUpdateInput = Partial<ComponentCreateInput>;
 
 export interface IComponentService {
   getAll(): Promise<ComponentSelect[]>;
