@@ -16,8 +16,8 @@ export class BrandController {
   }
 
   async create(req: FastifyRequest, rep: FastifyReply) {
-    const data = req.body as any;
-    const newBrand = await this.service.create(data);
+    const data = req.body as any;  
+    const newBrand = await this.service.create({ data });
     return rep.status(201).send({ success: true, data: newBrand });
   }
 

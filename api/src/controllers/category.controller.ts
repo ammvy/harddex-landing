@@ -17,7 +17,7 @@ export class CategoryController {
 
   async create(req: FastifyRequest, rep: FastifyReply) {
     const data = req.body as any;
-    const newCategory = await this.service.create(data);
+    const newCategory = await this.service.create({ data });
     return rep.status(201).send({ success: true, data: newCategory });
   }
 

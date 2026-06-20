@@ -74,7 +74,7 @@ export function buildApp() {
   const storage = new FirebaseStorage();
 
   const userDAO = new UserDAO(db);
-  const userService = new UserService(userDAO, storage);
+  const userService = new UserService(userDAO);
   const userController = new UserController(userService);
   const anaController = new AnaController(userService);
 
