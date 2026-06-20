@@ -10,5 +10,5 @@ export interface IUserService {
   resetPassword({ email, password }: { email: string; password: string }): Promise<UserSelect>;
   create({ data }: { data: CreateUserInput }): Promise<UserSelect>;
   update({ id, data }: { id: number; data: UpdateUserInput }): Promise<UserSelect>;
-  delete({ id }: { id: number }): Promise<void>;
+  delete({ id }: { id: number }): Promise<boolean>;
 }

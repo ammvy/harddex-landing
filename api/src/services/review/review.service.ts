@@ -1,7 +1,7 @@
 import { IReviewDAO } from '@/dao/review/review.dao.interface';
 import type { IReviewService } from './review.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { ReviewSelect } from '@infra/database/models/review.schema';
+import type { ReviewInsert, ReviewSelect } from '@infra/database/models/review.schema';
 
 export class ReviewService implements IReviewService {
   constructor(private readonly dao: IReviewDAO) {}
@@ -16,19 +16,19 @@ export class ReviewService implements IReviewService {
     return item;
   }
 
-  async create({ data }: { data: any }): Promise<ReviewSelect> {
+  async create({ data }: { data: ReviewInsert }): Promise<ReviewSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: any }): Promise<ReviewSelect> {
+  async update({ id, data }: { id: number; data: Partial<ReviewInsert> }): Promise<ReviewSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Review', String(id));
     return item;
   }
 
-  async delete({ id }: { id: number }): Promise<void> {
+  async delete({ id }: { id: number }): Promise<boolean> {
     const item = await this.dao.findById({ id });
     if (!item) throw new NotFoundError('Review', String(id));
-    await this.dao.delete({ id });
+    return this.dao.delete({ id });
   }
 }

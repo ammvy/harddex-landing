@@ -1,7 +1,7 @@
 import { IComponentDAO } from '@/dao/component/component.dao.interface';
-import type { IComponentService } from './component.service.interface';
+import type { ComponentCreateInput, ComponentUpdateInput, IComponentService } from './component.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
-import type { ComponentSelect } from '@infra/database/models/component.schema';
+import type { ComponentInsert, ComponentSelect } from '@infra/database/models/component.schema';
 
 export class ComponentService implements IComponentService {
   constructor(private readonly dao: IComponentDAO) {}
@@ -16,19 +16,19 @@ export class ComponentService implements IComponentService {
     return item;
   }
 
-  async create({ data }: { data: any }): Promise<ComponentSelect> {
+  async create({ data }: { data: ComponentCreateInput }): Promise<ComponentSelect> {
     return this.dao.create({ data });
   }
 
-  async update({ id, data }: { id: number; data: any }): Promise<ComponentSelect> {
+  async update({ id, data }: { id: number; data: ComponentUpdateInput }): Promise<ComponentSelect> {
     const item = await this.dao.update({ id, data });
     if (!item) throw new NotFoundError('Component', String(id));
     return item;
   }
 
-  async delete({ id }: { id: number }): Promise<void> {
+  async delete({ id }: { id: number }): Promise<boolean> {
     const item = await this.dao.findById({ id });
     if (!item) throw new NotFoundError('Component', String(id));
-    await this.dao.delete({ id });
+    return this.dao.delete({ id });
   }
 }
