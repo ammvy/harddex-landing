@@ -11,9 +11,9 @@ import {
   createJsonSchemaTransform,
 } from "fastify-type-provider-zod";
 
-import { UserDAO } from "@/dao";
-import { UserService } from "@/services";
-import { UserController } from "@/controllers";
+import { UserDAO, ProductDAO, BrandDAO, CategoryDAO, ComponentDAO, ManufacturerDAO, ReviewDAO, TypeDAO } from "@/dao";
+import { UserService, ProductService, BrandService, CategoryService, ComponentService, ManufacturerService, ReviewService, TypeService } from "@/services";
+import { UserController, ProductController, BrandController, CategoryController, ComponentController, ManufacturerController, ReviewController, TypeController } from "@/controllers";
 import { globalRoutes } from "@/routes";
 
 import { createDatabase } from "@infra/database/connection";
@@ -76,12 +76,47 @@ export function buildApp() {
   const userDAO = new UserDAO(db);
   const userService = new UserService(userDAO, storage);
   const userController = new UserController(userService);
-  const anaController = new AnaController(userService)
+  const anaController = new AnaController(userService);
+
+  const productDAO = new ProductDAO(db);
+  const productService = new ProductService(productDAO);
+  const productController = new ProductController(productService);
+
+  const brandDAO = new BrandDAO(db);
+  const brandService = new BrandService(brandDAO);
+  const brandController = new BrandController(brandService);
+
+  const categoryDAO = new CategoryDAO(db);
+  const categoryService = new CategoryService(categoryDAO);
+  const categoryController = new CategoryController(categoryService);
+
+  const componentDAO = new ComponentDAO(db);
+  const componentService = new ComponentService(componentDAO);
+  const componentController = new ComponentController(componentService);
+
+  const manufacturerDAO = new ManufacturerDAO(db);
+  const manufacturerService = new ManufacturerService(manufacturerDAO);
+  const manufacturerController = new ManufacturerController(manufacturerService);
+
+  const reviewDAO = new ReviewDAO(db);
+  const reviewService = new ReviewService(reviewDAO);
+  const reviewController = new ReviewController(reviewService);
+
+  const typeDAO = new TypeDAO(db);
+  const typeService = new TypeService(typeDAO);
+  const typeController = new TypeController(typeService);
 
   app.register(
     globalRoutes({
       userController,
       anaController,
+      productController,
+      brandController,
+      categoryController,
+      componentController,
+      manufacturerController,
+      reviewController,
+      typeController,
     }),
     { prefix: "/api/v1" }
   );
