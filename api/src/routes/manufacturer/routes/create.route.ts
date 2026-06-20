@@ -9,8 +9,8 @@ export function createManufacturerRoute({ controller }: { controller: Manufactur
       "/",
       {
         schema: {
-          description: "Cria uma nova categoria",
-          tags: ["manufacturers"],
+          description: "Cria um novo fabricante",
+          tags: ["Manufacturers"],
           body: createManufacturerDTO,
           response: {
             201: manufacturerSuccessResponseDTO,

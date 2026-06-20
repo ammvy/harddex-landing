@@ -9,8 +9,8 @@ export function getAllTypesRoute({ controller }: { controller: TypeController })
       "/",
       {
         schema: {
-          description: "Retorna todas as categorias",
-          tags: ["types"],
+          description: "Retorna todos os tipos",
+          tags: ["Types"],
           response: {
             200: typeListSuccessResponseDTO,
             400: errorResponseDTO,

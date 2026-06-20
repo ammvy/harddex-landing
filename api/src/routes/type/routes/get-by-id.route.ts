@@ -9,7 +9,7 @@ export function getTypeByIdRoute({ controller }: { controller: TypeController })
       "/:id",
       {
         schema: {
-          description: "Recupera um type pelo seu ID",
+          description: "Recupera um tipo pelo seu ID",
           tags: ["Types"],
           params: paramIdDTO,
           response: {

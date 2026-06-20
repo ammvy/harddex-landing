@@ -9,8 +9,8 @@ export function createReviewRoute({ controller }: { controller: ReviewController
       "/",
       {
         schema: {
-          description: "Cria uma nova categoria",
-          tags: ["reviews"],
+          description: "Cria uma nova avaliação",
+          tags: ["Reviews"],
           body: createReviewDTO,
           response: {
             201: reviewSuccessResponseDTO,

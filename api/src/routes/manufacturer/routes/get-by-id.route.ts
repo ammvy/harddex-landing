@@ -9,7 +9,7 @@ export function getManufacturerByIdRoute({ controller }: { controller: Manufactu
       "/:id",
       {
         schema: {
-          description: "Recupera um manufacturer pelo seu ID",
+          description: "Recupera um fabricante pelo seu ID",
           tags: ["Manufacturers"],
           params: paramIdDTO,
           response: {

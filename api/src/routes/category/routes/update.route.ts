@@ -9,8 +9,8 @@ export function updateCategoryRoute({ controller }: { controller: CategoryContro
       "/:id",
       {
         schema: {
-          description: "Atualiza um category pelo seu ID",
-          tags: ["Categorys"],
+          description: "Atualiza uma categoria pelo seu ID",
+          tags: ["Categories"],
           params: paramIdDTO,
           body: updateCategoryDTO,
           response: {

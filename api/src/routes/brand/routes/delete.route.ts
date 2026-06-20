@@ -14,7 +14,7 @@ export function deleteBrandRoute({ controller }: { controller: BrandController }
           tags: ["Brands"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Marca removida com sucesso"),
             404: errorResponseDTO,
           },
         },

@@ -10,11 +10,11 @@ export function deleteManufacturerRoute({ controller }: { controller: Manufactur
       "/:id",
       {
         schema: {
-          description: "Deleta um manufacturer pelo seu ID",
+          description: "Deleta um fabricante pelo seu ID",
           tags: ["Manufacturers"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Fabricante removido com sucesso"),
             404: errorResponseDTO,
           },
         },

@@ -9,8 +9,8 @@ export function getAllReviewsRoute({ controller }: { controller: ReviewControlle
       "/",
       {
         schema: {
-          description: "Retorna todas as categorias",
-          tags: ["reviews"],
+          description: "Retorna todas as avaliações",
+          tags: ["Reviews"],
           response: {
             200: reviewListSuccessResponseDTO,
             400: errorResponseDTO,

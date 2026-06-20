@@ -9,7 +9,7 @@ export function getReviewByIdRoute({ controller }: { controller: ReviewControlle
       "/:id",
       {
         schema: {
-          description: "Recupera um review pelo seu ID",
+          description: "Recupera uma avaliação pelo seu ID",
           tags: ["Reviews"],
           params: paramIdDTO,
           response: {

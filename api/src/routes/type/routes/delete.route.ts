@@ -10,11 +10,11 @@ export function deleteTypeRoute({ controller }: { controller: TypeController }) 
       "/:id",
       {
         schema: {
-          description: "Deleta um type pelo seu ID",
+          description: "Deleta um tipo pelo seu ID",
           tags: ["Types"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Tipo removido com sucesso"),
             404: errorResponseDTO,
           },
         },

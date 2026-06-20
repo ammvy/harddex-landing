@@ -9,7 +9,7 @@ export function updateComponentRoute({ controller }: { controller: ComponentCont
       "/:id",
       {
         schema: {
-          description: "Atualiza um component pelo seu ID",
+          description: "Atualiza um componente pelo seu ID",
           tags: ["Components"],
           params: paramIdDTO,
           body: updateComponentDTO,

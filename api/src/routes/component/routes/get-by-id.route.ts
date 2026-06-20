@@ -9,7 +9,7 @@ export function getComponentByIdRoute({ controller }: { controller: ComponentCon
       "/:id",
       {
         schema: {
-          description: "Recupera um component pelo seu ID",
+          description: "Recupera um componente pelo seu ID",
           tags: ["Components"],
           params: paramIdDTO,
           response: {

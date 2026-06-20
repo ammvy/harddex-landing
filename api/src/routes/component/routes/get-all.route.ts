@@ -9,8 +9,8 @@ export function getAllComponentsRoute({ controller }: { controller: ComponentCon
       "/",
       {
         schema: {
-          description: "Retorna todas as categorias",
-          tags: ["components"],
+          description: "Retorna todos os componentes",
+          tags: ["Components"],
           response: {
             200: componentListSuccessResponseDTO,
             400: errorResponseDTO,

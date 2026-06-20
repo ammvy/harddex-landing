@@ -9,8 +9,8 @@ export function createTypeRoute({ controller }: { controller: TypeController }) 
       "/",
       {
         schema: {
-          description: "Cria uma nova categoria",
-          tags: ["types"],
+          description: "Cria uma novo tipo",
+          tags: ["Types"],
           body: createTypeDTO,
           response: {
             201: typeSuccessResponseDTO,

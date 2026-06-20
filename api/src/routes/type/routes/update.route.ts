@@ -9,7 +9,7 @@ export function updateTypeRoute({ controller }: { controller: TypeController }) 
       "/:id",
       {
         schema: {
-          description: "Atualiza um type pelo seu ID",
+          description: "Atualiza um tipo pelo seu ID",
           tags: ["Types"],
           params: paramIdDTO,
           body: updateTypeDTO,

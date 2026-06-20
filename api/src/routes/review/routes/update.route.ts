@@ -9,7 +9,7 @@ export function updateReviewRoute({ controller }: { controller: ReviewController
       "/:id",
       {
         schema: {
-          description: "Atualiza um review pelo seu ID",
+          description: "Atualiza uma avaliação pelo seu ID",
           tags: ["Reviews"],
           params: paramIdDTO,
           body: updateReviewDTO,

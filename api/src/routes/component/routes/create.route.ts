@@ -10,7 +10,7 @@ export function createComponentRoute({ controller }: { controller: ComponentCont
       {
         schema: {
           description: "Adiciona um novo componente",
-          tags: ["components"],
+          tags: ["Components"],
           body: createComponentDTO,
           response: {
             201: componentSuccessResponseDTO,

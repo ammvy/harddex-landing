@@ -10,11 +10,11 @@ export function deleteComponentRoute({ controller }: { controller: ComponentCont
       "/:id",
       {
         schema: {
-          description: "Deleta um component pelo seu ID",
+          description: "Deleta um componente pelo seu ID",
           tags: ["Components"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Componente removido com sucesso"),
             404: errorResponseDTO,
           },
         },

@@ -14,7 +14,7 @@ export function deleteProductRoute({ controller }: { controller: ProductControll
           tags: ["Products"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Produto removido com sucesso"),
             404: errorResponseDTO,
           },
         },

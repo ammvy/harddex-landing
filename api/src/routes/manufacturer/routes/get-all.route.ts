@@ -9,8 +9,8 @@ export function getAllManufacturersRoute({ controller }: { controller: Manufactu
       "/",
       {
         schema: {
-          description: "Retorna todas as categorias",
-          tags: ["manufacturers"],
+          description: "Retorna todos os fabricantes",
+          tags: ["Manufacturers"],
           response: {
             200: manufacturerListSuccessResponseDTO,
             400: errorResponseDTO,

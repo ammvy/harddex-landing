@@ -10,11 +10,11 @@ export function deleteCategoryRoute({ controller }: { controller: CategoryContro
       "/:id",
       {
         schema: {
-          description: "Deleta um category pelo seu ID",
-          tags: ["Categorys"],
+          description: "Deleta uma categoria pelo seu ID",
+          tags: ["Categories"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Categoria removida com sucesso"),
             404: errorResponseDTO,
           },
         },

@@ -9,8 +9,8 @@ export function getCategoryByIdRoute({ controller }: { controller: CategoryContr
       "/:id",
       {
         schema: {
-          description: "Recupera um category pelo seu ID",
-          tags: ["Categorys"],
+          description: "Recupera uma categoria pelo seu ID",
+          tags: ["Categories"],
           params: paramIdDTO,
           response: {
             200: categorySuccessResponseDTO,

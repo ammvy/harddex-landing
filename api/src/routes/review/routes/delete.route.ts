@@ -10,11 +10,11 @@ export function deleteReviewRoute({ controller }: { controller: ReviewController
       "/:id",
       {
         schema: {
-          description: "Deleta um review pelo seu ID",
+          description: "Deleta uma avaliação pelo seu ID",
           tags: ["Reviews"],
           params: paramIdDTO,
           response: {
-            204: z.any(),
+            204: z.void().describe("Avaliação removida com sucesso"),
             404: errorResponseDTO,
           },
         },

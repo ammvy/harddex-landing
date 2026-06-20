@@ -12,6 +12,7 @@ export class CategoryController {
   async getById(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
     const category = await this.service.getById(id);
+    console.log("CategoryController.getById - category:", category);
     return rep.status(200).send({ success: true, data: category });
   }
 

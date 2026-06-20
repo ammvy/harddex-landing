@@ -9,7 +9,7 @@ export function updateManufacturerRoute({ controller }: { controller: Manufactur
       "/:id",
       {
         schema: {
-          description: "Atualiza um manufacturer pelo seu ID",
+          description: "Atualiza um fabricante pelo seu ID",
           tags: ["Manufacturers"],
           params: paramIdDTO,
           body: updateManufacturerDTO,
