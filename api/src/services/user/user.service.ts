@@ -68,9 +68,9 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async delete({ id }: { id: number }): Promise<void> {
+  async delete({ id }: { id: number }): Promise<boolean> {
     const user = await this.dao.findById({ id });
     if (!user) throw new NotFoundError('User', String(id));
-    await this.dao.delete({ id });
+    return this.dao.delete({ id });
   }
 }
