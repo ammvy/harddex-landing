@@ -51,10 +51,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex flex-col gap-6">
-      <SectionHead
-        kicker="Visão Geral"
-        title="Dashboard"
-      />
+      <SectionHead kicker="Visão Geral" title="Dashboard" />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s, i) => (
@@ -78,7 +75,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-sm">
           <div className="text-sm font-medium text-[var(--muted-foreground)] tracking-wide uppercase mb-4">
             Atividades Recentes
@@ -100,7 +97,9 @@ export default function AdminDashboard() {
                 <li key={s.label}>
                   <div className="flex items-center justify-between mb-1.5 text-xs text-[var(--foreground)] uppercase tracking-wider">
                     <span>{s.label}</span>
-                    <span className="text-[var(--muted-foreground)]">{s.value}</span>
+                    <span className="text-[var(--muted-foreground)]">
+                      {s.value}
+                    </span>
                   </div>
                   <div className="h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
                     <div
@@ -113,7 +112,7 @@ export default function AdminDashboard() {
             })}
           </ul>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

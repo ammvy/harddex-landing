@@ -13,8 +13,8 @@ export default function AdminTopbar({ onMenuToggle }: AdminTopbarProps) {
   const user = useAdminUser();
 
   return (
-    <div className="border-b border-border sticky top-0 z-30 bg-background">
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
+    <div className="border-b border-border sticky top-0 z-30 bg-background h-[68px]">
+      <div className="h-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <button
             onClick={onMenuToggle}

@@ -21,13 +21,41 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: <LayoutGrid size={16} strokeWidth={1.7} /> },
-  { href: "/admin/products", label: "Produtos", icon: <Package size={16} strokeWidth={1.7} /> },
-  { href: "/admin/manufacturers", label: "Fabricantes", icon: <Factory size={16} strokeWidth={1.7} /> },
-  { href: "/admin/components", label: "Componentes", icon: <Cpu size={16} strokeWidth={1.7} /> },
-  { href: "/admin/categories", label: "Categorias", icon: <Tag size={16} strokeWidth={1.7} /> },
-  { href: "/admin/brands", label: "Marcas", icon: <Award size={16} strokeWidth={1.7} /> },
-  { href: "/admin/users", label: "Usuários", icon: <Users size={16} strokeWidth={1.7} /> },
+  {
+    href: "/admin",
+    label: "Dashboard",
+    icon: <LayoutGrid size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/products",
+    label: "Produtos",
+    icon: <Package size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/manufacturers",
+    label: "Fabricantes",
+    icon: <Factory size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/components",
+    label: "Componentes",
+    icon: <Cpu size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/categories",
+    label: "Categorias",
+    icon: <Tag size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/brands",
+    label: "Marcas",
+    icon: <Award size={16} strokeWidth={1.7} />,
+  },
+  {
+    href: "/admin/users",
+    label: "Usuários",
+    icon: <Users size={16} strokeWidth={1.7} />,
+  },
 ];
 
 type AdminSidebarProps = {
@@ -67,7 +95,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:block border-r border-border sticky top-[57px] self-start h-[calc(100vh-57px)] w-[220px]">
+      <aside className="hidden lg:block border-r border-border sticky top-[68px] self-start h-[calc(100vh-68px)] w-[220px]">
         {navList}
       </aside>
 
