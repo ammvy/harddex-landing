@@ -6,6 +6,8 @@ import Header from "@/components/header";
 import ProfileHeaderTitle from "./_components/profile-header-title";
 import ProfilePhoto from "./_components/profile-photo";
 import ProfileFields from "./_components/profile-fields";
+import { LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function ProfilePage() {
   const { user, isLoading, isError } = useProfile();
@@ -66,8 +68,20 @@ function ProfileContent({ user }: ProfileContentProps) {
             onSubmit={onSubmit}
           />
         </div>
+
+        <div className="mt-10 flex justify-end">
+          <button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            style={{ fontFamily: "'Space Mono', monospace" }}
+            className="px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer bg-destructive/10 text-destructive border border-destructive hover:bg-destructive hover:text-white"
+          >
+            <LogOut size={13} strokeWidth={1.8} />
+            Sair da conta
+          </button>
+        </div>
       </main>
     </div>
   );
 }
+
 
