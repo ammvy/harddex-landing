@@ -1,7 +1,6 @@
 import { Device } from "../../compare/_data/types";
 import { PROFILE_LABELS } from "../../compare/_data/profiles";
 import { ProfileId } from "@/components/mouse";
-import { getFlatSpecs } from "./specs-parser";
 
 export function generateSmartFallbackText(
   deviceA: Device,
@@ -12,8 +11,8 @@ export function generateSmartFallbackText(
   const ratingB = deviceB.tdu[tdu] || deviceB.overall;
 
   const category = deviceA.category;
-  const specsA = getFlatSpecs(deviceA);
-  const specsB = getFlatSpecs(deviceB);
+  const specsA = deviceA.specs as any;
+  const specsB = deviceB.specs as any;
 
   let winner = deviceA;
   let loser = deviceB;

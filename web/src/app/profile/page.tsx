@@ -36,7 +36,8 @@ interface ProfileContentProps {
 }
 
 function ProfileContent({ user }: ProfileContentProps) {
-  const { form, isEditing, startEdit, cancelEdit, onSubmit, isPending } = useProfileForm({ user });
+  const { form, isEditing, startEdit, cancelEdit, onSubmit, isPending } =
+    useProfileForm({ user });
 
   return (
     <div
@@ -83,5 +84,3 @@ function ProfileContent({ user }: ProfileContentProps) {
     </div>
   );
 }
-
-

@@ -25,14 +25,14 @@ function HeroNavigations() {
       desc: "Catálogo curado, sem ruído, sem patrocínio.",
       Art: BinocularsIcon,
       code: "§ 02",
-      href: "/#",
+      href: "/compare",
     },
     {
       title: "Resolva",
       desc: "Recomendação técnica para o seu uso real.",
       Art: FlagBannerFoldIcon,
       code: "§ 03",
-      href: "/#",
+      href: "/compare",
     },
   ];
 

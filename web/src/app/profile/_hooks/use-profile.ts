@@ -1,10 +1,11 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { User } from "../_types";
 import { ProfileId } from "@/components/mouse";
+import { useRouter } from "next/navigation";
 
 const REVERSE_STYLE_MAPPING: Record<string, ProfileId> = {
   GAMER: "GAMER",
@@ -15,9 +16,14 @@ const REVERSE_STYLE_MAPPING: Record<string, ProfileId> = {
 };
 
 export function useProfile() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  const { data: user, isLoading, isError } = useQuery<User | null>({
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery<User | null>({
     queryKey: ["me"],
     queryFn: async () => {
       if (!session?.user?.apiToken) {
@@ -30,7 +36,9 @@ export function useProfile() {
       });
 
       const backendUser = data.data;
-      const mappedStyle = backendUser.style ? REVERSE_STYLE_MAPPING[backendUser.style] ?? "PRO" : "PRO";
+      const mappedStyle = backendUser.style
+        ? (REVERSE_STYLE_MAPPING[backendUser.style] ?? "PRO")
+        : "PRO";
 
       return {
         id: String(backendUser.id),
@@ -42,6 +50,15 @@ export function useProfile() {
     },
     enabled: !!session?.user?.apiToken,
   });
+
+  if (!user?.id && status === "authenticated") {
+    signOut({ callbackUrl: "/login" });
+    return {
+      user: null,
+      isLoading: true,
+      isError: false,
+    };
+  }
 
   return {
     user: user ?? null,

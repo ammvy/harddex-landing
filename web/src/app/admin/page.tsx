@@ -6,7 +6,6 @@ import { Users, Package, Factory, Cpu, FolderTree, Tag } from "lucide-react";
 import SectionHead from "./_components/section-head";
 
 export default function AdminDashboard() {
-  // === Queries para stats ===
   const { data: users = [] } = useQuery({
     queryKey: ["admin", "stats", "users"],
     queryFn: async () => {
