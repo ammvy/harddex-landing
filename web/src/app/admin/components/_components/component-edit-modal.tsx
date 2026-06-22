@@ -43,7 +43,7 @@ export default function ComponentEditModal({
     }
   };
 
-  const valid = draft.name.trim().length >= 2 && draft.productId > 0 && !jsonError;
+  const valid = draft.name.trim().length >= 2 && draft?.productId && draft.productId > 0 && !jsonError;
 
   return (
     <Modal

@@ -10,6 +10,7 @@ import IconBtn from "../../_components/icon-btn";
 import SectionHead from "../../_components/section-head";
 import Modal from "../../_components/modal";
 import ProductEditModal from "./product-edit-modal";
+import { Brand, Category } from "../../_types";
 
 export default function ProductsTable({
   products,
@@ -93,8 +94,11 @@ export default function ProductsTable({
           </thead>
           <tbody className="divide-y divide-border/40 text-foreground">
             {products.map((p) => {
-              const brandName = brands.find((b) => b.id === p.brandId)?.name || "N/A";
-              const catName = categories.find((c) => c.id === p.categoryId)?.name || "N/A";
+              const brandName =
+                brands.find((b: Brand) => b.id === p.brandId)?.name || "N/A";
+              const catName =
+                categories.find((c: Category) => c.id === p.categoryId)?.name ||
+                "N/A";
 
               return (
                 <tr
@@ -181,7 +185,7 @@ export default function ProductsTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteProduct(confirmDel.id)}
+                  onClick={() => deleteProduct(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >
