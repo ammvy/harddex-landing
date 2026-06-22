@@ -8,8 +8,33 @@ import ProfilePhoto from "./_components/profile-photo";
 import ProfileFields from "./_components/profile-fields";
 
 export default function ProfilePage() {
-  const { user } = useProfile();
-  const { form, isEditing, startEdit, cancelEdit, onSubmit } = useProfileForm({ user });
+  const { user, isLoading, isError } = useProfile();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center">
+        <p className="text-lg">Carregando perfil...</p>
+      </div>
+    );
+  }
+
+  if (isError || !user) {
+    return (
+      <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center">
+        <p className="text-lg text-red-500">Erro ao carregar perfil.</p>
+      </div>
+    );
+  }
+
+  return <ProfileContent user={user} />;
+}
+
+interface ProfileContentProps {
+  user: Exclude<ReturnType<typeof useProfile>["user"], null>;
+}
+
+function ProfileContent({ user }: ProfileContentProps) {
+  const { form, isEditing, startEdit, cancelEdit, onSubmit, isPending } = useProfileForm({ user });
 
   return (
     <div
@@ -24,6 +49,7 @@ export default function ProfilePage() {
           onStartEdit={startEdit}
           onCancelEdit={cancelEdit}
           onSubmit={onSubmit}
+          isPending={isPending}
         />
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 lg:gap-8">
@@ -44,3 +70,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
