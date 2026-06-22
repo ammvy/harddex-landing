@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowRight } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z
@@ -19,6 +22,9 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -32,8 +38,23 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    // Logic for authenticating can go here
-    console.log("Submitting login form:", data);
+    setError(null);
+    try {
+      const response = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (response?.error) {
+        setError("Credenciais inválidas. Verifique seu e-mail e senha.");
+      } else {
+        router.push("/");
+        router.refresh();
+      }
+    } catch (err) {
+      setError("Ocorreu um erro ao fazer login. Tente novamente.");
+    }
   };
 
   return (
@@ -93,6 +114,15 @@ export default function LoginForm() {
           </span>
         )}
       </label>
+
+      {error && (
+        <div
+          style={{ fontFamily: "'Space Mono', monospace" }}
+          className="text-[11px] text-destructive uppercase tracking-wide text-center bg-destructive/10 py-2 border border-destructive/20"
+        >
+          {error}
+        </div>
+      )}
 
       <button
         type="submit"

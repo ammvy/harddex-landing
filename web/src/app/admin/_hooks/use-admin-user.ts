@@ -1,11 +1,14 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+
 export function useAdminUser() {
-  // Retorna os dados do usuário administrador mockado (futuramente integrado com a autenticação real)
+  const { data: session, status } = useSession();
+
   return {
-    name: "Marina Tavares",
-    email: "marina@harddex.io",
-    role: "Admin",
-    tdu: "TDU-DEV-7F3A",
+    name: session?.user?.name ?? "",
+    email: session?.user?.email ?? "",
+    role: (session?.user as any)?.permission ?? "USER",
+    isLoading: status === "loading",
   };
 }
