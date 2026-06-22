@@ -6,6 +6,9 @@ import { MouseAvatar } from "./mouse-avatar";
 import { ChatBubble } from "./chat-bubble";
 import { Device } from "../_data/types";
 import { HeadCircuitIcon } from "@phosphor-icons/react/dist/ssr";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { STYLE_TO_PROFILE } from "../_data/profiles";
 
 interface AskMouseProps {
   deviceA: Device;
@@ -13,17 +16,23 @@ interface AskMouseProps {
 }
 
 export default function AskMouse({ deviceA, deviceB }: AskMouseProps) {
-  const {
-    state,
-    response,
-    error,
-    tdu,
-    setTdu,
-    askOpinion,
-    reset,
-  } = useMouseOpinion();
+  const { state, response, error, tdu, setTdu, askOpinion, reset } =
+    useMouseOpinion();
+
+  const { data: session } = useSession();
+  const userStyle = session?.user?.style;
+
+  useEffect(() => {
+    if (userStyle) {
+      const mapped = STYLE_TO_PROFILE[userStyle];
+      if (mapped) {
+        setTdu(mapped);
+      }
+    }
+  }, [userStyle, setTdu]);
 
   const handleAsk = () => {
+
     if (state === "loading" || state === "streaming") return;
     askOpinion(deviceA, deviceB);
   };
@@ -32,8 +41,6 @@ export default function AskMouse({ deviceA, deviceB }: AskMouseProps) {
 
   return (
     <section className="mt-14">
-
-
       <div className="flex items-center justify-between mb-6">
         <h2
           style={{
@@ -86,8 +93,8 @@ export default function AskMouse({ deviceA, deviceB }: AskMouseProps) {
               {state === "loading" || state === "streaming"
                 ? "Analisando..."
                 : state === "done"
-                ? "Analisar Novamente"
-                : "Pedir Opinião"}
+                  ? "Analisar Novamente"
+                  : "Pedir Opinião"}
             </span>
             <HeadCircuitIcon size={20} />
           </button>
