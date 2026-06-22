@@ -2,9 +2,11 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import type { IProductService } from "@/services";
 export class ProductController {
   constructor(private readonly service: IProductService) {}
-  async getAll(_req: FastifyRequest, rep: FastifyReply) {
-    const products = await this.service.getAll();
-    return rep.status(200).send({ success: true, data: products });
+  async getAll(req: FastifyRequest, rep: FastifyReply) {
+    const { detailed } = req.query as any;
+    console.log("CONTROLLER GETALL detailed value:", detailed, typeof detailed);
+    const products = await this.service.getAll({ detailed });
+    return rep.status(200).send({ success: true, detailedParam: detailed, data: products as any });
   }
   async getById(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;

@@ -23,14 +23,60 @@ export const productDTO = z.object({
   categoryId: z.number().nullable().optional(),
 });
 
+export const brandDTO = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+});
+
+export const categoryDTO = z.object({
+  id: z.number(),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+});
+
+export const attachmentDTO = z.object({
+  id: z.number(),
+  url: z.string(),
+  productId: z.number(),
+});
+
+export const componentTypeDTO = z.object({
+  id: z.number(),
+  name: z.string(),
+});
+
+export const componentDTO = z.object({
+  id: z.number(),
+  name: z.string(),
+  specification: z.any().nullable().optional(),
+  description: z.string().nullable().optional(),
+  averagePrice: z.number().nullable().optional(),
+  productId: z.number(),
+  typeId: z.number().nullable().optional(),
+  manufacturerId: z.number().nullable().optional(),
+  type: componentTypeDTO.nullable().optional(),
+});
+
+export const productDetailedDTO = productDTO.extend({
+  brand: brandDTO.nullable().optional(),
+  category: categoryDTO.nullable().optional(),
+  attachments: z.array(attachmentDTO).optional(),
+  components: z.array(componentDTO).optional(),
+});
+
+export const getAllProductsQueryDTO = z.object({
+  detailed: z.preprocess((val) => val === "true" || val === true, z.boolean()).optional(),
+});
+
 export const productSuccessResponseDTO = z.object({
   success: z.boolean(),
-  data: productDTO,
+  data: productDetailedDTO,
 });
 
 export const productListSuccessResponseDTO = z.object({
   success: z.boolean(),
-  data: z.array(productDTO),
+  data: z.array(productDetailedDTO),
 });
 
 export const errorResponseDTO = z.object({
