@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { ArrowUpRightIcon, CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import Container from "@/components/ui/container";
+import { useRouter } from "next/navigation";
 
 function HeroUseCases() {
   const useCases = [
@@ -127,6 +128,8 @@ function HeroUseCases() {
 
   const [useIdx, setUseIdx] = useState(0);
   const selected = useCases[useIdx];
+
+  const router = useRouter();
 
   return (
     <Container>
@@ -267,7 +270,10 @@ function HeroUseCases() {
                 </ul>
               </div>
 
-              <button className="bg-background hover:bg-primary hover:text-foreground/90 light:hover:text-background text-foreground/90 px-6 py-4 uppercase tracking-widest text-[11px] flex items-center justify-between transition-colors duration-100 cursor-pointer">
+              <button
+                onClick={() => router.push("/quiz")}
+                className="bg-background hover:bg-primary hover:text-foreground/90 light:hover:text-background text-foreground/90 px-6 py-4 uppercase tracking-widest text-[11px] flex items-center justify-between transition-colors duration-100 cursor-pointer"
+              >
                 <span>Iniciar diagnóstico</span>
                 <ArrowUpRightIcon size={14} strokeWidth={1.6} />
               </button>
