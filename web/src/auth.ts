@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
 import { authConfig } from "./auth.config";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:3333";
+const API_BASE = process.env.API_URL ?? "http://localhost:3334";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -21,7 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             {
               email: credentials.email,
               password: credentials.password,
-            }
+            },
           );
 
           if (res.success && res.data) {
