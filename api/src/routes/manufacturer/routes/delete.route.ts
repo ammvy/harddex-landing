@@ -14,7 +14,10 @@ export function deleteManufacturerRoute({ controller }: { controller: Manufactur
           tags: ["Manufacturers"],
           params: paramIdDTO,
           response: {
-            204: z.void().describe("Fabricante removido com sucesso"),
+            200: z.object({
+              success: z.boolean(),
+              message: z.string(),
+            }).describe("Fabricante removido com sucesso"),
             404: errorResponseDTO,
           },
         },
