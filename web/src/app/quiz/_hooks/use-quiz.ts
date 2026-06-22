@@ -3,12 +3,15 @@
 import { useState, useMemo } from "react";
 import { Phase, Level, ProfileId } from "../_data/types";
 import { QUESTIONS } from "../_data/questions";
+import { useUpdateUserStyleMutation } from "./use-update-user-style";
 
 export function useQuiz() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [level, setLevel] = useState<Level>(1);
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+
+  const updateStyleMutation = useUpdateUserStyleMutation();
 
   const active = useMemo(
     () => QUESTIONS.filter((q) => q.level <= level),
@@ -56,9 +59,32 @@ export function useQuiz() {
 
   const answerCurrent = (optionIndex: number) => {
     if (!current) return;
-    setAnswers((prev) => ({ ...prev, [current.id]: optionIndex }));
+    const newAnswers = { ...answers, [current.id]: optionIndex };
+    setAnswers(newAnswers);
     setTimeout(() => {
       if (idx + 1 >= total) {
+        const s: Record<ProfileId, number> = {
+          GAMER: 0,
+          PRO: 0,
+          STUDY: 0,
+          CREATIVE: 0,
+          DEV: 0,
+          MOBILE: 0,
+        };
+        Object.entries(newAnswers).forEach(([qid, oi]) => {
+          const q = QUESTIONS.find((x) => x.id === qid);
+          if (!q) return;
+          const w = q.options[oi]?.w || {};
+          (Object.keys(w) as ProfileId[]).forEach((k) => {
+            s[k] += w[k] || 0;
+          });
+        });
+        const r = (Object.entries(s) as [ProfileId, number][]).sort(
+          (a, b) => b[1] - a[1],
+        );
+        const w = r[0]?.[0] || "PRO";
+
+        updateStyleMutation.mutate(w);
         setPhase("result");
       } else {
         setIdx((prev) => prev + 1);
