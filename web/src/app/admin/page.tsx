@@ -121,7 +121,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <SectionHead title="Painel de Administração" />
+      <SectionHead title="Painel de Administração" kicker="" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => (
           <div
@@ -132,7 +132,9 @@ export default function AdminDashboard() {
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {stat.label}
               </h3>
-              <div className="text-gray-400 dark:text-gray-600">{stat.icon}</div>
+              <div className="text-gray-400 dark:text-gray-600">
+                {stat.icon}
+              </div>
             </div>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">
               {stat.value}
@@ -143,74 +145,6 @@ export default function AdminDashboard() {
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-  return (
-    <div className="flex flex-col gap-6">
-      <SectionHead kicker="Visão Geral" title="Dashboard" />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {stats.map((s, i) => (
-          <div
-            key={s.label}
-            className="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-sm hover:border-[var(--primary)] transition-colors duration-200"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-[var(--muted-foreground)] tracking-wide uppercase">
-                {s.label}
-              </span>
-              <span className="text-[var(--primary)]">{s.icon}</span>
-            </div>
-            <div className="text-4xl font-light text-[var(--foreground)] tracking-tight">
-              {s.value}
-            </div>
-            <div className="mt-2 text-xs text-[var(--muted-foreground)] tracking-wider uppercase opacity-80">
-              {s.sub}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-sm">
-          <div className="text-sm font-medium text-[var(--muted-foreground)] tracking-wide uppercase mb-4">
-            Atividades Recentes
-          </div>
-          <div className="text-sm text-[var(--muted-foreground)] text-center py-8">
-            Nenhuma atividade registrada ainda.
-          </div>
-        </div>
-
-        <div className="p-6 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-sm">
-          <div className="text-sm font-medium text-[var(--muted-foreground)] tracking-wide uppercase mb-4">
-            Resumo de Cadastros
-          </div>
-          <ul className="flex flex-col gap-4">
-            {stats.map((s) => {
-              const max = Math.max(...stats.map((x) => x.value));
-              const pct = max === 0 ? 0 : (s.value / max) * 100;
-              return (
-                <li key={s.label}>
-                  <div className="flex items-center justify-between mb-1.5 text-xs text-[var(--foreground)] uppercase tracking-wider">
-                    <span>{s.label}</span>
-                    <span className="text-[var(--muted-foreground)]">
-                      {s.value}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[var(--primary)] rounded-full"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div> */}
     </div>
   );
 }

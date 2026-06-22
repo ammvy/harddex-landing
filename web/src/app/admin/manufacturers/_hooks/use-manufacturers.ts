@@ -12,11 +12,18 @@ export function useManufacturers() {
   const [editing, setEditing] = useState<Manufacturer | null>(null);
   const [confirmDel, setConfirmDel] = useState<Manufacturer | null>(null);
 
-  const { data: allManufacturers = [], isLoading, error, isFetching } = useQuery({
+  const {
+    data: allManufacturers = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "manufacturers"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/manufacturers");
+        const { data } = await api.get<{ data: Manufacturer[] }>(
+          "/manufacturers",
+        );
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar fabricantes");
@@ -28,23 +35,33 @@ export function useManufacturers() {
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return allManufacturers.filter((m) => !query || m.name.toLowerCase().includes(query));
+    return allManufacturers.filter(
+      (m: Manufacturer) => !query || m.name.toLowerCase().includes(query),
+    );
   }, [allManufacturers, q]);
 
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
-  const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const paginated = filtered.slice(
+    (curPage - 1) * PAGE_SIZE,
+    curPage * PAGE_SIZE,
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (manufacturer: Manufacturer) => {
       if (manufacturer.id) {
-        const { data } = await api.put(`/manufacturers/${manufacturer.id}`, manufacturer);
-        if (!data.success) throw new Error(data.message || "Erro ao atualizar fabricante");
+        const { data } = await api.put(
+          `/manufacturers/${manufacturer.id}`,
+          manufacturer,
+        );
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar fabricante");
         return data.data;
       } else {
         const { data } = await api.post("/manufacturers", manufacturer);
-        if (!data.success) throw new Error(data.message || "Erro ao criar fabricante");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar fabricante");
         return data.data;
       }
     },
@@ -57,7 +74,8 @@ export function useManufacturers() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const { data } = await api.delete(`/manufacturers/${id}`);
-      if (!data.success) throw new Error(data.message || "Erro ao deletar fabricante");
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar fabricante");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "manufacturers"] });
@@ -92,5 +110,4 @@ export function useManufacturers() {
   };
 }
 
-export type UseManufacturersReturn = ReturnType<typeof useManufacturers>;
 export type UseManufacturersReturn = ReturnType<typeof useManufacturers>;

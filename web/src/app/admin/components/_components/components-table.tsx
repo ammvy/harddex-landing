@@ -10,6 +10,7 @@ import IconBtn from "../../_components/icon-btn";
 import SectionHead from "../../_components/section-head";
 import Modal from "../../_components/modal";
 import ComponentEditModal from "./component-edit-modal";
+import { Manufacturer, Product } from "../../_types";
 
 export default function ComponentsTable({
   components,
@@ -57,11 +58,7 @@ export default function ComponentsTable({
       />
 
       <div className="flex items-center gap-2 flex-wrap mb-4">
-        <SearchBar
-          value={q}
-          onChange={setQ}
-          placeholder="Buscar componente"
-        />
+        <SearchBar value={q} onChange={setQ} placeholder="Buscar componente" />
         <select
           value={productFilter}
           onChange={(e) => {
@@ -72,7 +69,7 @@ export default function ComponentsTable({
           className="bg-input-background border border-border px-3 py-2.5 outline-none uppercase tracking-wider text-[11px] focus:border-primary transition-colors duration-100 text-foreground"
         >
           <option value="all">Todos produtos</option>
-          {products.map((p) => (
+          {products.map((p: Product) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>
@@ -96,8 +93,13 @@ export default function ComponentsTable({
           </thead>
           <tbody className="divide-y divide-border/40 text-foreground">
             {components.map((c) => {
-              const productName = products.find((p) => p.id === c.productId)?.name || "N/A";
-              const mfgName = manufacturers.find((m) => m.id === c.manufacturerId)?.name || "N/A";
+              const productName =
+                products.find((p: Product) => p.id === c.productId)?.name ||
+                "N/A";
+              const mfgName =
+                manufacturers.find(
+                  (m: Manufacturer) => m.id === c.manufacturerId,
+                )?.name || "N/A";
 
               return (
                 <tr
@@ -191,7 +193,7 @@ export default function ComponentsTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteComponent(confirmDel.id)}
+                  onClick={() => deleteComponent(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >

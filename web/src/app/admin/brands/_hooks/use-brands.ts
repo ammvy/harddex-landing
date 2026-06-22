@@ -22,7 +22,7 @@ export function useBrands() {
     queryKey: ["admin", "brands"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/brands");
+        const { data } = await api.get<{ data: Brand[] }>("/brands");
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar marcas");
@@ -35,7 +35,7 @@ export function useBrands() {
   // === FILTRO LOCAL ===
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return allBrands.filter((b) => {
+    return allBrands.filter((b: Brand) => {
       return !query || b.name.toLowerCase().includes(query);
     });
   }, [allBrands, q]);
@@ -46,7 +46,7 @@ export function useBrands() {
   const curPage = Math.min(page, pages);
   const paginated = filtered.slice(
     (curPage - 1) * PAGE_SIZE,
-    curPage * PAGE_SIZE
+    curPage * PAGE_SIZE,
   );
 
   // === MUTATION: POST (CREATE) + PUT (UPDATE) ===
@@ -146,5 +146,4 @@ export function useBrands() {
   };
 }
 
-export type UseBrandsReturn = ReturnType<typeof useBrands>;
 export type UseBrandsReturn = ReturnType<typeof useBrands>;

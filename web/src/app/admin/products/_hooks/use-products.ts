@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
-import { Product } from "../../_types";
+import { Brand, Category, Product } from "../../_types";
 
 export function useProducts() {
   const queryClient = useQueryClient();
@@ -13,11 +13,16 @@ export function useProducts() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [confirmDel, setConfirmDel] = useState<Product | null>(null);
 
-  const { data: allProducts = [], isLoading, error, isFetching } = useQuery({
+  const {
+    data: allProducts = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "products"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/products");
+        const { data } = await api.get<{ data: Product[] }>("/products");
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar produtos");
@@ -43,7 +48,7 @@ export function useProducts() {
     queryKey: ["admin", "categories"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/categories");
+        const { data } = await api.get<{ data: Category[] }>("/categories");
         return data.data ?? [];
       } catch (error) {
         return [];
@@ -53,8 +58,9 @@ export function useProducts() {
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return allProducts.filter((p) => {
-      const brandName = brands.find((b) => b.id === p.brandId)?.name.toLowerCase() || "";
+    return allProducts.filter((p: Product) => {
+      const brandName =
+        brands.find((b: Brand) => b.id === p.brandId)?.name.toLowerCase() || "";
       const matchesQuery =
         !query ||
         p.name.toLowerCase().includes(query) ||
@@ -71,17 +77,22 @@ export function useProducts() {
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
-  const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const paginated = filtered.slice(
+    (curPage - 1) * PAGE_SIZE,
+    curPage * PAGE_SIZE,
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (product: Product) => {
       if (product.id) {
         const { data } = await api.put(`/products/${product.id}`, product);
-        if (!data.success) throw new Error(data.message || "Erro ao atualizar produto");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar produto");
         return data.data;
       } else {
         const { data } = await api.post("/products", product);
-        if (!data.success) throw new Error(data.message || "Erro ao criar produto");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar produto");
         return data.data;
       }
     },
@@ -94,7 +105,8 @@ export function useProducts() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const { data } = await api.delete(`/products/${id}`);
-      if (!data.success) throw new Error(data.message || "Erro ao deletar produto");
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar produto");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "products"] });

@@ -9,6 +9,7 @@ import IconBtn from "../../_components/icon-btn";
 import SectionHead from "../../_components/section-head";
 import Modal from "../../_components/modal";
 import BrandEditModal from "./brand-edit-modal";
+import { Brand } from "../../_types";
 
 export default function BrandsTable({
   brands,
@@ -46,11 +47,7 @@ export default function BrandsTable({
       />
 
       <div className="flex items-center gap-2 flex-wrap mb-4">
-        <SearchBar
-          value={q}
-          onChange={setQ}
-          placeholder="Buscar marca"
-        />
+        <SearchBar value={q} onChange={setQ} placeholder="Buscar marca" />
       </div>
 
       <div className="border border-border overflow-x-auto bg-background">
@@ -137,7 +134,7 @@ export default function BrandsTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteBrand(confirmDel.id)}
+                  onClick={() => deleteBrand(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >

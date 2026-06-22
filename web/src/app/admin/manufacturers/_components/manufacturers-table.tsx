@@ -46,11 +46,7 @@ export default function ManufacturersTable({
       />
 
       <div className="flex items-center gap-2 flex-wrap mb-4">
-        <SearchBar
-          value={q}
-          onChange={setQ}
-          placeholder="Buscar fabricante"
-        />
+        <SearchBar value={q} onChange={setQ} placeholder="Buscar fabricante" />
       </div>
 
       <div className="border border-border overflow-x-auto bg-background">
@@ -137,7 +133,7 @@ export default function ManufacturersTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteManufacturer(confirmDel.id)}
+                  onClick={() => deleteManufacturer(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >

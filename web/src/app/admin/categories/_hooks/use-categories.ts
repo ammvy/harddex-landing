@@ -12,11 +12,16 @@ export function useCategories() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [confirmDel, setConfirmDel] = useState<Category | null>(null);
 
-  const { data: allCategories = [], isLoading, error, isFetching } = useQuery({
+  const {
+    data: allCategories = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "categories"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/categories");
+        const { data } = await api.get<{ data: Category[] }>("/categories");
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar categorias");
@@ -28,23 +33,30 @@ export function useCategories() {
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return allCategories.filter((c) => !query || c.name.toLowerCase().includes(query));
+    return allCategories.filter(
+      (c: Category) => !query || c.name.toLowerCase().includes(query),
+    );
   }, [allCategories, q]);
 
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
-  const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const paginated = filtered.slice(
+    (curPage - 1) * PAGE_SIZE,
+    curPage * PAGE_SIZE,
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (category: Category) => {
       if (category.id) {
         const { data } = await api.put(`/categories/${category.id}`, category);
-        if (!data.success) throw new Error(data.message || "Erro ao atualizar categoria");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar categoria");
         return data.data;
       } else {
         const { data } = await api.post("/categories", category);
-        if (!data.success) throw new Error(data.message || "Erro ao criar categoria");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar categoria");
         return data.data;
       }
     },
@@ -57,7 +69,8 @@ export function useCategories() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const { data } = await api.delete(`/categories/${id}`);
-      if (!data.success) throw new Error(data.message || "Erro ao deletar categoria");
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar categoria");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
@@ -92,5 +105,4 @@ export function useCategories() {
   };
 }
 
-export type UseCategoriesReturn = ReturnType<typeof useCategories>;
 export type UseCategoriesReturn = ReturnType<typeof useCategories>;

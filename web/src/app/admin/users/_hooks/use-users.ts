@@ -14,11 +14,16 @@ export function useUsers() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [confirmDel, setConfirmDel] = useState<User | null>(null);
 
-  const { data: allUsers = [], isLoading, error, isFetching } = useQuery({
+  const {
+    data: allUsers = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "users"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/users");
+        const { data } = await api.get<{ data: User[] }>("/users");
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar usuários");
@@ -31,9 +36,9 @@ export function useUsers() {
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return allUsers.filter(
-      (u) =>
+      (u: User) =>
         u.name.toLowerCase().includes(term) ||
-        u.email.toLowerCase().includes(term)
+        u.email.toLowerCase().includes(term),
     );
   }, [allUsers, q]);
 
@@ -47,11 +52,13 @@ export function useUsers() {
     mutationFn: async (user: User) => {
       if (user.id) {
         const { data } = await api.put(`/users/${user.id}`, user);
-        if (!data.success) throw new Error(data.message || "Erro ao atualizar usuário");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar usuário");
         return data.data;
       } else {
         const { data } = await api.post("/users", user);
-        if (!data.success) throw new Error(data.message || "Erro ao criar usuário");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar usuário");
         return data.data;
       }
     },
@@ -64,7 +71,8 @@ export function useUsers() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const { data } = await api.delete(`/users/${id}`);
-      if (!data.success) throw new Error(data.message || "Erro ao deletar usuário");
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar usuário");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });

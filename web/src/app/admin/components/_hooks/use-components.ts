@@ -13,11 +13,16 @@ export function useComponents() {
   const [editing, setEditing] = useState<Component | null>(null);
   const [confirmDel, setConfirmDel] = useState<Component | null>(null);
 
-  const { data: allComponents = [], isLoading, error, isFetching } = useQuery({
+  const {
+    data: allComponents = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin", "components"],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/components");
+        const { data } = await api<{ data: Component[] }>("/components");
         return data.data ?? [];
       } catch (error) {
         throw new Error("Falha ao carregar componentes");
@@ -53,7 +58,7 @@ export function useComponents() {
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return allComponents.filter((c) => {
+    return allComponents.filter((c: Component) => {
       const matchesQuery =
         !query ||
         c.name.toLowerCase().includes(query) ||
@@ -69,17 +74,25 @@ export function useComponents() {
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
-  const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const paginated = filtered.slice(
+    (curPage - 1) * PAGE_SIZE,
+    curPage * PAGE_SIZE,
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (component: Component) => {
       if (component.id) {
-        const { data } = await api.put(`/components/${component.id}`, component);
-        if (!data.success) throw new Error(data.message || "Erro ao atualizar componente");
+        const { data } = await api.put(
+          `/components/${component.id}`,
+          component,
+        );
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar componente");
         return data.data;
       } else {
         const { data } = await api.post("/components", component);
-        if (!data.success) throw new Error(data.message || "Erro ao criar componente");
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar componente");
         return data.data;
       }
     },
@@ -92,7 +105,8 @@ export function useComponents() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const { data } = await api.delete(`/components/${id}`);
-      if (!data.success) throw new Error(data.message || "Erro ao deletar componente");
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar componente");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "components"] });
