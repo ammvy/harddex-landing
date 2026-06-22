@@ -7,8 +7,8 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import QuizBanner from "./quiz-banner";
 import SignupActions from "./signup-actions";
-import { api } from "@/lib/axios";
 import { signIn } from "next-auth/react";
+import { useSignupMutation } from "../_hooks/use-signup";
 
 const signupSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -28,6 +28,8 @@ export default function SignupForm() {
   const router = useRouter();
   const [target, setTarget] = useState<"/quiz" | "/">("/quiz");
   const [error, setError] = useState<string | null>(null);
+  
+  const signupMutation = useSignupMutation();
 
   const {
     register,
@@ -46,8 +48,8 @@ export default function SignupForm() {
   const onSubmit = async (data: SignupFormValues) => {
     setError(null);
     try {
-      // 1. Criar o usuário na API
-      await api.post("/users", {
+      // 1. Criar o usuário na API via mutation
+      await signupMutation.mutateAsync({
         name: data.name,
         email: data.email,
         password: data.password,

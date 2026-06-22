@@ -272,6 +272,10 @@ Usar React Query (`@tanstack/react-query`) apenas quando:
 - Precisa de **cache client-side** com revalidação automática
 - É uma **mutação** (POST, PUT, DELETE) que exige feedback imediato
 
+**⚠️ REGRA CRÍTICA PARA CLIENT-SIDE**: 
+A requisição deve ser feita usando SEMPRE um hook do `tanstack-query/react-query`!
+É **terminantemente proibido** realizar chamadas diretas com `api.get` ou `api.post` dentro de componentes (e.g., num `onSubmit` ou `onClick`). A lógica de API client-side deve ser encapsulada em hooks personalizados (`useQuery` ou `useMutation`) que ficam em arquivos isolados dentro da pasta `_hooks/`.
+
 ### Estrutura do API Client
 ```
 src/lib/
