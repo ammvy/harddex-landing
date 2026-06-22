@@ -1,7 +1,8 @@
 import { Device } from "../../compare/_data/types";
+import { getFlatSpecs } from "./specs-parser";
 
 export function getSpecsSummary(device: Device, category: string): string {
-  const specs = device.specs as any;
+  const specs = getFlatSpecs(device);
   if (category === "phone") {
     return `
 - CPU: ${specs.cpu} (${specs.cpuCores} núcleos, ${specs.cpuClock} GHz, ${specs.process})
