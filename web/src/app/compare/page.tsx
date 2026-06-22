@@ -9,6 +9,8 @@ import AskMouse from "./_components/ask-mouse";
 
 export default function ComparePage() {
   const {
+    isLoading,
+    isError,
     detail,
     pickerA,
     setPickerA,
@@ -21,6 +23,32 @@ export default function ComparePage() {
     setB,
     sections,
   } = useCompare();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex gap-1.5 items-center justify-center">
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot1" />
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot2" />
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot3" />
+          </div>
+          <span style={{ fontFamily: "'Space Mono', monospace" }} className="uppercase text-[10px] tracking-widest opacity-60">
+            Carregando comparador...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !a || !b) {
+    return (
+      <div className="min-h-screen w-full bg-background text-foreground flex flex-col items-center justify-center p-6 text-center">
+        <p className="text-destructive font-bold mb-2">Erro ao carregar dados do comparador</p>
+        <p className="text-sm opacity-70">Certifique-se de que a API está rodando e possui dados semeados.</p>
+      </div>
+    );
+  }
 
   return (
     <div
