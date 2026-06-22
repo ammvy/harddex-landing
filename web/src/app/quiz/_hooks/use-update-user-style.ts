@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { ProfileId } from "../_data/types";
 
@@ -16,6 +16,7 @@ const STYLE_MAPPING: Record<ProfileId, string> = {
 
 export function useUpdateUserStyleMutation() {
   const { data: session, update } = useSession();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (profileId: ProfileId) => {
@@ -32,13 +33,15 @@ export function useUpdateUserStyleMutation() {
           headers: {
             Authorization: `Bearer ${session.user.apiToken}`,
           },
-        }
+        },
       );
 
-      // Atualiza a sessão do next-auth localmente para refletir o novo style
       await update({ style });
 
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 }
