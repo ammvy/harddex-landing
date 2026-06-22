@@ -125,20 +125,20 @@ export default function AdminDashboard() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+            className="bg-card border border-border p-6 rounded-lg transition-all duration-300 hover:shadow-md hover:border-primary/50"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900 dark:text-white">
+              <h3 className="font-semibold text-foreground">
                 {stat.label}
               </h3>
-              <div className="text-gray-400 dark:text-gray-600">
+              <div className="text-primary">
                 {stat.icon}
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+            <p className="text-3xl font-bold text-foreground">
               {stat.value}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               {stat.sub}
             </p>
           </div>
