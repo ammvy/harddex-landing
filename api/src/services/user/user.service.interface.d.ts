@@ -1,11 +1,19 @@
 import type { UserSelect } from '@infra/database/models/user.schema';
 import type { CreateUserInput, UpdateUserInput } from '@/routes/user/dtos/user.schema';
 
+export type AuthenticateResult = {
+  token: string;
+  user: Omit<UserSelect, "password">;
+};
+
 export interface IUserService {
   getAll(): Promise<UserSelect[]>;
   getById({ id }: { id: number }): Promise<UserSelect>;
   getByEmail({ email }: { email: string }): Promise<UserSelect>;
-  authenticate({ email, password }: { email: string; password: string }): Promise<UserSelect>;
+  authenticate(
+    { email, password }: { email: string; password: string },
+    jwtSign: (payload: object) => string
+  ): Promise<AuthenticateResult>;
   requestPasswordReset({ email }: { email: string }): Promise<UserSelect>;
   resetPassword({ email, password }: { email: string; password: string }): Promise<UserSelect>;
   create({ data }: { data: CreateUserInput }): Promise<UserSelect>;

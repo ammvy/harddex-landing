@@ -8,6 +8,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   FIREBASE_SERVICE_ACCOUNT_PATH: z.string(),
   FIREBASE_STORAGE_BUCKET: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

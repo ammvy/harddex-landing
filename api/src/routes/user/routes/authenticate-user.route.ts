@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { UserController } from "@/controllers/user.controller";
-import { authenticateUserDTO, errorDetailsResponseDTO, userSuccessResponseDTO } from "../dtos/user.schema";
+import { authenticateUserDTO, errorDetailsResponseDTO, authenticateResponseDTO } from "../dtos/user.schema";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export function authenticateUserRoute({ controller }: { controller: UserController }) {
@@ -13,7 +13,7 @@ export function authenticateUserRoute({ controller }: { controller: UserControll
           tags: ["Users"],
           body: authenticateUserDTO,
           response: {
-            200: userSuccessResponseDTO,
+            200: authenticateResponseDTO,
             400: errorDetailsResponseDTO,
             404: errorDetailsResponseDTO,
           },
