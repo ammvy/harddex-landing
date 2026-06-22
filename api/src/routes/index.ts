@@ -15,39 +15,51 @@ import { componentRoutes } from "./component";
 import { manufacturerRoutes } from "./manufacturer";
 import { reviewRoutes } from "./review";
 import { typeRoutes } from "./type";
-import { anaRoutes } from "./ana";
 import { AnaController } from "@/controllers/ana.controller";
 
-export function globalRoutes({ 
-  userController, 
-  anaController,
+export function globalRoutes({
+  userController,
   productController,
   brandController,
   categoryController,
   componentController,
   manufacturerController,
   reviewController,
-  typeController
-}: { 
-  userController: UserController, 
-  anaController: AnaController,
-  productController: ProductController,
-  brandController: BrandController,
-  categoryController: CategoryController,
-  componentController: ComponentController,
-  manufacturerController: ManufacturerController,
-  reviewController: ReviewController,
-  typeController: TypeController
+  typeController,
+}: {
+  userController: UserController;
+  productController: ProductController;
+  brandController: BrandController;
+  categoryController: CategoryController;
+  componentController: ComponentController;
+  manufacturerController: ManufacturerController;
+  reviewController: ReviewController;
+  typeController: TypeController;
 }) {
   return async (app: FastifyInstance) => {
-    app.register(userRoutes({ controller: userController }), { prefix: "/users" });
-    app.register(productRoutes({ controller: productController }), { prefix: "/products" });
-    app.register(brandRoutes({ controller: brandController }), { prefix: "/brands" });
-    app.register(categoryRoutes({ controller: categoryController }), { prefix: "/categories" });
-    app.register(componentRoutes({ controller: componentController }), { prefix: "/components" });
-    app.register(manufacturerRoutes({ controller: manufacturerController }), { prefix: "/manufacturers" });
-    app.register(reviewRoutes({ controller: reviewController }), { prefix: "/reviews" });
-    app.register(typeRoutes({ controller: typeController }), { prefix: "/types" });
-    app.register(anaRoutes({ controller: anaController }), { prefix: "/ana" })
+    app.register(userRoutes({ controller: userController }), {
+      prefix: "/users",
+    });
+    app.register(productRoutes({ controller: productController }), {
+      prefix: "/products",
+    });
+    app.register(brandRoutes({ controller: brandController }), {
+      prefix: "/brands",
+    });
+    app.register(categoryRoutes({ controller: categoryController }), {
+      prefix: "/categories",
+    });
+    app.register(componentRoutes({ controller: componentController }), {
+      prefix: "/components",
+    });
+    app.register(manufacturerRoutes({ controller: manufacturerController }), {
+      prefix: "/manufacturers",
+    });
+    app.register(reviewRoutes({ controller: reviewController }), {
+      prefix: "/reviews",
+    });
+    app.register(typeRoutes({ controller: typeController }), {
+      prefix: "/types",
+    });
   };
 }

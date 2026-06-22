@@ -12,15 +12,41 @@ import {
   createJsonSchemaTransform,
 } from "fastify-type-provider-zod";
 
-import { UserDAO, ProductDAO, BrandDAO, CategoryDAO, ComponentDAO, ManufacturerDAO, ReviewDAO, TypeDAO } from "@/dao";
-import { UserService, ProductService, BrandService, CategoryService, ComponentService, ManufacturerService, ReviewService, TypeService } from "@/services";
-import { UserController, ProductController, BrandController, CategoryController, ComponentController, ManufacturerController, ReviewController, TypeController } from "@/controllers";
+import {
+  UserDAO,
+  ProductDAO,
+  BrandDAO,
+  CategoryDAO,
+  ComponentDAO,
+  ManufacturerDAO,
+  ReviewDAO,
+  TypeDAO,
+} from "@/dao";
+import {
+  UserService,
+  ProductService,
+  BrandService,
+  CategoryService,
+  ComponentService,
+  ManufacturerService,
+  ReviewService,
+  TypeService,
+} from "@/services";
+import {
+  UserController,
+  ProductController,
+  BrandController,
+  CategoryController,
+  ComponentController,
+  ManufacturerController,
+  ReviewController,
+  TypeController,
+} from "@/controllers";
 import { globalRoutes } from "@/routes";
 
 import { createDatabase } from "@infra/database/connection";
 import { initFirebase } from "@infra/firebase/admin";
 import { FirebaseStorage } from "@infra/firebase/storage";
-import { AnaController } from "./controllers/ana.controller";
 
 export function buildApp() {
   const app = Fastify({ logger: true });
@@ -28,7 +54,10 @@ export function buildApp() {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  app.register(cors, { origin: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE"] });
+  app.register(cors, {
+    origin: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  });
   app.register(jwt, { secret: env.JWT_SECRET, sign: { expiresIn: "7d" } });
   app.register(multipart);
   app.setErrorHandler(errorHandler);
@@ -78,7 +107,6 @@ export function buildApp() {
   const userDAO = new UserDAO(db);
   const userService = new UserService(userDAO);
   const userController = new UserController(userService);
-  const anaController = new AnaController(userService);
 
   const productDAO = new ProductDAO(db);
   const productService = new ProductService(productDAO);
@@ -98,7 +126,9 @@ export function buildApp() {
 
   const manufacturerDAO = new ManufacturerDAO(db);
   const manufacturerService = new ManufacturerService(manufacturerDAO);
-  const manufacturerController = new ManufacturerController(manufacturerService);
+  const manufacturerController = new ManufacturerController(
+    manufacturerService,
+  );
 
   const reviewDAO = new ReviewDAO(db);
   const reviewService = new ReviewService(reviewDAO);
@@ -111,7 +141,6 @@ export function buildApp() {
   app.register(
     globalRoutes({
       userController,
-      anaController,
       productController,
       brandController,
       categoryController,
@@ -120,7 +149,7 @@ export function buildApp() {
       reviewController,
       typeController,
     }),
-    { prefix: "/api/v1" }
+    { prefix: "/api/v1" },
   );
 
   return app;
