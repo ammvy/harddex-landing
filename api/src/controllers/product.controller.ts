@@ -4,8 +4,7 @@ export class ProductController {
   constructor(private readonly service: IProductService) {}
   async getAll(req: FastifyRequest, rep: FastifyReply) {
     const { detailed } = req.query as any;
-    console.log("CONTROLLER GETALL detailed value:", detailed, typeof detailed);
-    const products = await this.service.getAll({ detailed });
+    const products = await this.service.getAll();
     return rep.status(200).send({ success: true, detailedParam: detailed, data: products as any });
   }
   async getById(req: FastifyRequest, rep: FastifyReply) {
@@ -27,6 +26,6 @@ export class ProductController {
   async delete(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
     await this.service.delete({ id: Number(id) });
-    return rep.status(204).send();
+    return rep.status(200).send({ success: true, message: "Produto removido com sucesso" });
   }
 }
