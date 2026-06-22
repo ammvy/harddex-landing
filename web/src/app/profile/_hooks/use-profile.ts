@@ -51,7 +51,7 @@ export function useProfile() {
     enabled: !!session?.user?.apiToken,
   });
 
-  if (!user?.id && status === "authenticated") {
+  if ((!user?.id && status === "authenticated" && !isLoading) || isError) {
     signOut({ callbackUrl: "/login" });
     return {
       user: null,
