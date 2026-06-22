@@ -1,25 +1,59 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 import { Product } from "../../_types";
-import { SEED_PRODUCTS } from "../../_data/products";
-import { SEED_BRANDS } from "../../_data/brands";
-import { SEED_CATEGORIES } from "../../_data/categories";
 
 export function useProducts() {
-  const [products, setProducts] = useState<Product[]>(SEED_PRODUCTS);
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<"all" | number>("all");
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<Product | null>(null);
   const [confirmDel, setConfirmDel] = useState<Product | null>(null);
 
-  const brands = SEED_BRANDS;
-  const categories = SEED_CATEGORIES;
+  const { data: allProducts = [], isLoading, error, isFetching } = useQuery({
+    queryKey: ["admin", "products"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/products");
+        return data.data ?? [];
+      } catch (error) {
+        throw new Error("Falha ao carregar produtos");
+      }
+    },
+    staleTime: 1000 * 60,
+    retry: 1,
+  });
+
+  const { data: brands = [] } = useQuery({
+    queryKey: ["admin", "brands"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/brands");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["admin", "categories"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/categories");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return products.filter((p) => {
+    return allProducts.filter((p) => {
       const brandName = brands.find((b) => b.id === p.brandId)?.name.toLowerCase() || "";
       const matchesQuery =
         !query ||
@@ -32,34 +66,54 @@ export function useProducts() {
 
       return matchesQuery && matchesCategory;
     });
-  }, [products, q, categoryFilter, brands]);
+  }, [allProducts, q, categoryFilter, brands]);
 
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
   const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
 
-  const saveProduct = (item: Product) => {
-    if (item.id) {
-      setProducts((prev) => prev.map((x) => (x.id === item.id ? item : x)));
-    } else {
-      setProducts((prev) => [
-        { ...item, id: Date.now() },
-        ...prev,
-      ]);
-    }
-    setEditing(null);
-  };
+  const saveMutation = useMutation({
+    mutationFn: async (product: Product) => {
+      if (product.id) {
+        const { data } = await api.put(`/products/${product.id}`, product);
+        if (!data.success) throw new Error(data.message || "Erro ao atualizar produto");
+        return data.data;
+      } else {
+        const { data } = await api.post("/products", product);
+        if (!data.success) throw new Error(data.message || "Erro ao criar produto");
+        return data.data;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
+      setEditing(null);
+    },
+  });
 
-  const deleteProduct = (id: number) => {
-    setProducts((prev) => prev.filter((x) => x.id !== id));
-    setConfirmDel(null);
-  };
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const { data } = await api.delete(`/products/${id}`);
+      if (!data.success) throw new Error(data.message || "Erro ao deletar produto");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
+      setConfirmDel(null);
+    },
+  });
 
   return {
     products: paginated,
+    allProducts,
     brands,
     categories,
+    isLoading,
+    isFetching,
+    isSaving: saveMutation.isPending,
+    isDeleting: deleteMutation.isPending,
+    error,
+    saveError: saveMutation.error,
+    deleteError: deleteMutation.error,
     q,
     setQ: (v: string) => {
       setQ(v);
@@ -77,8 +131,8 @@ export function useProducts() {
     setEditing,
     confirmDel,
     setConfirmDel,
-    saveProduct,
-    deleteProduct,
+    saveProduct: (item: Product) => saveMutation.mutate(item),
+    deleteProduct: (id: number) => deleteMutation.mutate(id),
   };
 }
 export type UseProductsReturn = ReturnType<typeof useProducts>;

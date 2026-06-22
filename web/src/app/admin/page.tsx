@@ -1,53 +1,151 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 import { Users, Package, Factory, Cpu, FolderTree, Tag } from "lucide-react";
 import SectionHead from "./_components/section-head";
-import { SEED_PRODUCTS } from "./_data/products";
-import { SEED_MANUFACTURERS } from "./_data/manufacturers";
-import { SEED_COMPONENTS } from "./_data/components";
-import { SEED_CATEGORIES } from "./_data/categories";
-import { SEED_BRANDS } from "./_data/brands";
-import { SEED_USERS } from "./_data/users";
 
 export default function AdminDashboard() {
+  // === Queries para stats ===
+  const { data: users = [] } = useQuery({
+    queryKey: ["admin", "stats", "users"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/users");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["admin", "stats", "products"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/products");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: manufacturers = [] } = useQuery({
+    queryKey: ["admin", "stats", "manufacturers"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/manufacturers");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: components = [] } = useQuery({
+    queryKey: ["admin", "stats", "components"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/components");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["admin", "stats", "categories"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/categories");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  const { data: brands = [] } = useQuery({
+    queryKey: ["admin", "stats", "brands"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/brands");
+        return data.data ?? [];
+      } catch (error) {
+        return [];
+      }
+    },
+  });
+
+  // === Build stats ===
   const stats = [
     {
       label: "Usuários",
-      value: SEED_USERS.length,
-      sub: `${SEED_USERS.filter((u) => u.permission === "ADMIN").length} admins`,
+      value: users.length,
+      sub: `${users.filter((u: any) => u.permission === "ADMIN").length} admins`,
       icon: <Users size={18} strokeWidth={1.6} />,
     },
     {
       label: "Produtos",
-      value: SEED_PRODUCTS.length,
+      value: products.length,
       sub: "catálogo geral",
       icon: <Package size={18} strokeWidth={1.6} />,
     },
     {
       label: "Fabricantes",
-      value: SEED_MANUFACTURERS.length,
+      value: manufacturers.length,
       sub: "registrados",
       icon: <Factory size={18} strokeWidth={1.6} />,
     },
     {
       label: "Componentes",
-      value: SEED_COMPONENTS.length,
+      value: components.length,
       sub: "peças detalhadas",
       icon: <Cpu size={18} strokeWidth={1.6} />,
     },
     {
       label: "Categorias",
-      value: SEED_CATEGORIES.length,
+      value: categories.length,
       sub: "organização",
       icon: <FolderTree size={18} strokeWidth={1.6} />,
     },
     {
       label: "Marcas",
-      value: SEED_BRANDS.length,
+      value: brands.length,
       sub: "registradas",
       icon: <Tag size={18} strokeWidth={1.6} />,
     },
   ];
+
+  return (
+    <div>
+      <SectionHead title="Painel de Administração" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                {stat.label}
+              </h3>
+              <div className="text-gray-400 dark:text-gray-600">{stat.icon}</div>
+            </div>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stat.value}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              {stat.sub}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className="flex flex-col gap-6">
