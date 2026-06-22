@@ -14,7 +14,10 @@ export function deleteReviewRoute({ controller }: { controller: ReviewController
           tags: ["Reviews"],
           params: paramIdDTO,
           response: {
-            204: z.void().describe("Avaliação removida com sucesso"),
+            200: z.object({
+              success: z.boolean(),
+              message: z.string(),
+            }).describe("Avaliação removida com sucesso"),
             404: errorResponseDTO,
           },
         },
