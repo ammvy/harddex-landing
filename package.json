@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install:all": "pnpm install"
-  }
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.9.18",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@9.0.0"
 }
