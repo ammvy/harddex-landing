@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Device } from "../_data/types";
 import { ProfileId } from "@/components/mouse";
 
@@ -11,8 +11,10 @@ export function useMouseOpinion() {
   const [response, setResponse] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [tdu, setTdu] = useState<ProfileId>("GAMER");
+  const animationIdRef = useRef<number>(0);
 
   const reset = () => {
+    animationIdRef.current++;
     setState("idle");
     setResponse("");
     setError(null);
@@ -20,6 +22,9 @@ export function useMouseOpinion() {
 
   const askOpinion = async (deviceA: Device, deviceB: Device) => {
     if (!deviceA || !deviceB) return;
+
+    animationIdRef.current++;
+    const currentAnimationId = animationIdRef.current;
 
     setState("loading");
     setResponse("");
@@ -42,32 +47,32 @@ export function useMouseOpinion() {
         throw new Error(`Erro na requisição: ${res.statusText}`);
       }
 
-      if (!res.body) {
-        throw new Error("Corpo da resposta vazio.");
-      }
+      const data = await res.json();
+      const fullText = data.text || "";
+
+      if (currentAnimationId !== animationIdRef.current) return;
 
       setState("streaming");
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
+      const words = fullText.split(" ");
       let accumulatedText = "";
 
-      while (!done) {
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        if (value) {
-          const chunk = decoder.decode(value, { stream: !done });
-          accumulatedText += chunk;
-          setResponse(accumulatedText);
-        }
+      for (let i = 0; i < words.length; i++) {
+        if (currentAnimationId !== animationIdRef.current) return;
+        accumulatedText += (i === 0 ? "" : " ") + words[i];
+        setResponse(accumulatedText);
+        // Pequeno atraso para simular digitação natural
+        await new Promise((resolve) => setTimeout(resolve, 20 + Math.random() * 20));
       }
 
+      if (currentAnimationId !== animationIdRef.current) return;
       setState("done");
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Ocorreu um erro desconhecido.");
-      setState("error");
+      if (currentAnimationId === animationIdRef.current) {
+        console.error(err);
+        setError(err.message || "Ocorreu um erro desconhecido.");
+        setState("error");
+      }
     }
   };
 
@@ -81,3 +86,4 @@ export function useMouseOpinion() {
     reset,
   };
 }
+

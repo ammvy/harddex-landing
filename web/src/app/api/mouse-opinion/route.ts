@@ -3,8 +3,8 @@ import { Device } from "../../compare/_data/types";
 import { PROFILE_LABELS } from "../../compare/_data/profiles";
 import { getSpecsSummary } from "./specs-formatter";
 import { generateSmartFallbackText } from "./fallback-generator";
-import { createGeminiStream } from "./gemini-stream";
 import { ProfileId } from "@/components/mouse";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,8 +23,6 @@ export async function POST(req: NextRequest) {
 
     const apiKey =
       process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-
-    const encoder = new TextEncoder();
 
     if (apiKey) {
       const labelTdu = PROFILE_LABELS[tdu] || tdu;
@@ -47,7 +45,7 @@ ${deviceBCard}
 ---
 
 Instruções importantes:
-1. Apresente-se de forma amigável no início como o mascote Mouse ("Oi, aqui é o Mouse! 🐱" ou similar).
+1. Apresente-se de forma amigável no início como o mascote Mouse ("Oi, aqui é o Mouse!" ou similar).
 2. Analise os aspectos chave mais relevantes especificamente para o perfil de usuário: "${labelTdu}". Ignore specs irrelevantes para este perfil.
 3. Compare os valores chave (como velocidade de leitura, TFLOPS, refresh rate, bateria ou preço) justificando por que um se sobressai.
 4. Escolha claramente um vencedor no final (ou declare empate técnico se forem extremamente parecidos para este perfil de uso).
@@ -56,14 +54,16 @@ Instruções importantes:
 `;
 
       try {
-        const geminiStream = await createGeminiStream(apiKey, prompt, encoder);
-        return new Response(geminiStream, {
-          headers: {
-            "Content-Type": "text/plain; charset=utf-8",
-            "Cache-Control": "no-cache",
-            Connection: "keep-alive",
-          },
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemma-4-26b-a4b-it" });
+
+        const result = await model.generateContent({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
         });
+
+        const responseText = result.response.text();
+
+        return NextResponse.json({ text: responseText });
       } catch (geminiError) {
         console.warn(
           "Falha ao chamar a API do Gemini. Usando fallback inteligente local...",
@@ -72,39 +72,10 @@ Instruções importantes:
       }
     }
 
-    // Fallback: Smart local comparison generated server-side and streamed to look realistic
+    // Fallback: Smart local comparison generated server-side
     const fallbackText = generateSmartFallbackText(deviceA, deviceB, tdu);
 
-    const fallbackStream = new ReadableStream({
-      async start(controller) {
-        const words = fallbackText.split(" ");
-        let i = 0;
-
-        async function sendNextWord() {
-          if (i >= words.length) {
-            controller.close();
-            return;
-          }
-
-          const chunk = (i === 0 ? "" : " ") + words[i];
-          controller.enqueue(encoder.encode(chunk));
-          i++;
-
-          const delay = 25 + Math.random() * 30;
-          setTimeout(sendNextWord, delay);
-        }
-
-        sendNextWord();
-      },
-    });
-
-    return new Response(fallbackStream, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
+    return NextResponse.json({ text: fallbackText });
   } catch (err: any) {
     console.error("Erro no manipulador API Mouse Opinion:", err);
     return NextResponse.json(
