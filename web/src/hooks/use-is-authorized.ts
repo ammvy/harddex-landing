@@ -1,18 +1,19 @@
 "use client";
+import { useSession } from "next-auth/react";
 
-import { useSession } from "./use-session";
+export function useIsAuthorized(
+  allowedPermissions: string[] = ["ADMIN", "CURATOR"],
+) {
+  const { data: session, status } = useSession();
 
-export function useIsAuthorized(allowedPermissions: string[] = ["ADMIN", "CURATOR"]) {
-  const { user, loading } = useSession();
-
-  if (loading) {
-    return { isAuthorized: false, loading };
+  if (status === "loading") {
+    return { isAuthorized: false, loading: true };
   }
 
-  if (!user) {
-    return { isAuthorized: false, loading };
+  if (!session?.user) {
+    return { isAuthorized: false, loading: false };
   }
 
-  const hasPermission = allowedPermissions.includes(user.permission);
-  return { isAuthorized: hasPermission, loading };
+  const hasPermission = allowedPermissions.includes(session.user.permission);
+  return { isAuthorized: hasPermission, loading: false };
 }
