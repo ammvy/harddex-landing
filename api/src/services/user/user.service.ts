@@ -55,7 +55,8 @@ export class UserService implements IUserService {
     const user = await this.dao.findByEmail({ email });
     if (!user) throw new NotFoundError('User', email);
 
-    const updatedUser = await this.dao.update({ id: user.id, data: { password } });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updatedUser = await this.dao.update({ id: user.id, data: { password: hashedPassword } });
     if (!updatedUser) throw new NotFoundError('User', String(user.id));
 
     return updatedUser;
@@ -82,7 +83,12 @@ export class UserService implements IUserService {
       }
     }
 
-    const user = await this.dao.update({ id, data });
+    const updateData = { ...data };
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+
+    const user = await this.dao.update({ id, data: updateData });
     if (!user) throw new NotFoundError('User', String(id));
     return user;
   }
