@@ -27,7 +27,15 @@ export function UserEditModal({
     permission: user?.permission || "USER",
   });
 
-  const valid = draft.name.trim().length >= 2 && draft.email.trim().includes("@");
+  const isNewUser = !user;
+  const isPasswordValid = isNewUser
+    ? (draft.password && draft.password.trim().length >= 6)
+    : (!draft.password || draft.password.trim().length >= 6);
+
+  const valid =
+    draft.name.trim().length >= 2 &&
+    draft.email.trim().includes("@") &&
+    isPasswordValid;
 
   const handleSave = () => {
     if (!valid) return;
