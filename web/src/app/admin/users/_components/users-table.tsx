@@ -10,6 +10,7 @@ import IconBtn from "../../_components/icon-btn";
 import SectionHead from "../../_components/section-head";
 import Modal from "../../_components/modal";
 import { UserEditModal } from "./user-edit-modal";
+import { useIsAuthorized } from "@/hooks/use-is-authorized";
 
 export default function UsersTable({
   users,
@@ -25,6 +26,8 @@ export default function UsersTable({
   saveUser,
   deleteUser,
 }: UseUsersReturn) {
+  const { isAuthorized } = useIsAuthorized(["ADMIN"]);
+
   const emptyUser = () => ({
     id: 0,
     name: "",
@@ -39,13 +42,15 @@ export default function UsersTable({
         kicker="Controle"
         title="Usuários"
         action={
-          <button
-            onClick={() => setEditingUser(emptyUser())}
-            style={{ fontFamily: "'Space Mono', monospace" }}
-            className="bg-primary text-primary-foreground px-5 py-3 uppercase tracking-widest text-[11px] flex items-center gap-2 hover:opacity-90 transition-opacity duration-100 cursor-pointer"
-          >
-            <Plus size={14} strokeWidth={2} /> Novo Usuário
-          </button>
+          isAuthorized ? (
+            <button
+              onClick={() => setEditingUser(emptyUser())}
+              style={{ fontFamily: "'Space Mono', monospace" }}
+              className="bg-primary text-primary-foreground px-5 py-3 uppercase tracking-widest text-[11px] flex items-center gap-2 hover:opacity-90 transition-opacity duration-100 cursor-pointer"
+            >
+              <Plus size={14} strokeWidth={2} /> Novo Usuário
+            </button>
+          ) : undefined
         }
       />
 
@@ -67,7 +72,7 @@ export default function UsersTable({
               <th className="px-4 py-3 font-normal">Nome / Email</th>
               <th className="px-4 py-3 font-normal">Estilo</th>
               <th className="px-4 py-3 font-normal">Permissão</th>
-              <th className="px-4 py-3 font-normal text-right">Ações</th>
+              {isAuthorized && <th className="px-4 py-3 font-normal text-right">Ações</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-border/40 text-foreground">
@@ -93,26 +98,28 @@ export default function UsersTable({
                     {u.permission}
                   </Pill>
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-1.5">
-                    <IconBtn title="Editar" onClick={() => setEditingUser(u)}>
-                      <Pencil size={14} strokeWidth={1.7} />
-                    </IconBtn>
-                    <IconBtn
-                      title="Excluir"
-                      danger
-                      onClick={() => setConfirmDel(u)}
-                    >
-                      <Trash2 size={14} strokeWidth={1.7} />
-                    </IconBtn>
-                  </div>
-                </td>
+                {isAuthorized && (
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <IconBtn title="Editar" onClick={() => setEditingUser(u)}>
+                        <Pencil size={14} strokeWidth={1.7} />
+                      </IconBtn>
+                      <IconBtn
+                        title="Excluir"
+                        danger
+                        onClick={() => setConfirmDel(u)}
+                      >
+                        <Trash2 size={14} strokeWidth={1.7} />
+                      </IconBtn>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
             {users.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={isAuthorized ? 4 : 3}
                   className="px-4 py-10 text-center text-[13px] opacity-40"
                 >
                   Nenhum usuário encontrado.
