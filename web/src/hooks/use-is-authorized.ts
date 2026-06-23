@@ -17,5 +17,6 @@ export function useIsAuthorized(
   const hasPermission = allowedPermissions.includes(
     session?.user?.permission as string,
   );
+
   return { isAuthorized: hasPermission, loading: false };
 }
