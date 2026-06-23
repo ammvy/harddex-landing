@@ -5,6 +5,7 @@ import { ProfileId } from "@/components/mouse";
 import { PROFILE_LABELS } from "../_data/profiles";
 import { Device } from "../_data/types";
 import { OpinionState } from "../_hooks/use-mouse-opinion";
+import { Loading } from "@/components/ui/loading";
 
 interface ChatBubbleProps {
   state: OpinionState;
@@ -105,19 +106,7 @@ export function ChatBubble({
         )}
 
         {state === "loading" && (
-          <div className="flex flex-col items-center justify-center py-6 gap-2">
-            <div className="flex gap-1.5 items-center justify-center">
-              <span className="w-2 h-2 bg-primary rounded-full animate-dot1" />
-              <span className="w-2 h-2 bg-primary rounded-full animate-dot2" />
-              <span className="w-2 h-2 bg-primary rounded-full animate-dot3" />
-            </div>
-            <span
-              style={{ fontFamily: "'Space Mono', monospace" }}
-              className="uppercase text-[9px] tracking-widest opacity-60 animate-pulse"
-            >
-              Analisando hardware...
-            </span>
-          </div>
+          <Loading size="sm" text="análise" />
         )}
 
         {(state === "streaming" || state === "done") && (

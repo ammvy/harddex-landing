@@ -8,16 +8,13 @@ import ProfilePhoto from "./_components/profile-photo";
 import ProfileFields from "./_components/profile-fields";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { Loading } from "@/components/ui/loading";
 
 export default function ProfilePage() {
   const { user, isLoading, isError } = useProfile();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center">
-        <p className="text-lg">Carregando perfil...</p>
-      </div>
-    );
+    return <Loading fullScreen text="perfil" />;
   }
 
   if (isError || !user) {

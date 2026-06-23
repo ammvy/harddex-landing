@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { DevicePicker } from "./_components/device-picker";
 import { SpecSection } from "./_components/spec-section";
 import { shouldShow } from "./_data/spec-builders";
+import { Loading } from "@/components/ui/loading";
 import AskMouse from "./_components/ask-mouse";
 
 export default function ComparePage() {
@@ -25,20 +26,7 @@ export default function ComparePage() {
   } = useCompare();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex gap-1.5 items-center justify-center">
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot1" />
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot2" />
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-dot3" />
-          </div>
-          <span style={{ fontFamily: "'Space Mono', monospace" }} className="uppercase text-[10px] tracking-widest opacity-60">
-            Carregando comparador...
-          </span>
-        </div>
-      </div>
-    );
+    return <Loading fullScreen text="comparador" />;
   }
 
   if (isError || !a || !b) {
