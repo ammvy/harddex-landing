@@ -16,8 +16,8 @@ export const authConfig = {
 
       if (isAdminRoute) {
         if (!isLoggedIn) return false;
-        const permission = (auth.user as any).permission;
-        if (!["ADMIN", "CURATOR"].includes(permission)) {
+        const permission = auth.user?.permission;
+        if (!permission || !["ADMIN", "CURATOR"].includes(permission)) {
           return Response.redirect(new URL("/", nextUrl));
         }
         return true;
@@ -34,6 +34,24 @@ export const authConfig = {
       }
 
       return true;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.userId = user.id;
+        token.permission = user.permission;
+        token.style = user.style;
+        token.apiToken = user.apiToken;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.userId;
+        session.user.permission = token.permission;
+        session.user.style = token.style;
+        session.user.apiToken = token.apiToken;
+      }
+      return session;
     },
   },
   providers: [],

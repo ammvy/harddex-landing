@@ -1,4 +1,5 @@
 import "next-auth";
+import "next-auth/jwt";
 
 type UserPermission = "ADMIN" | "USER" | "CURATOR";
 type UserStyle = "BASIC" | "INTERMEDIATE" | "ADVANCED" | "GAMER" | "PROFESSIONAL" 
