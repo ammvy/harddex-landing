@@ -1,9 +1,0 @@
-[admin](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin) vamos agora implementar as respectivas requisições das telas de admin
-
-Vamos criar os respectivos hooks (mutations e get) das páginas [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/brands/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/categories/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/components/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/manufacturers/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/products/page.tsx) , [page.tsx](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/web/src/app/admin/users/page.tsx) (claro, nos seus respectivos componentes)
-
-Cada tabela (get), form (post, put), ou ação no geral (post, put, delete) deve possuir conexões reais com o banco agora, não mais mocadas
-
-Analise as[routes](file;file:///c%3A/Users/Victor/Desktop/Referencias%20Pessoais/harddex-landing/api/src/routes) para ver o que possível aproveitar, caso falte alguma rota especifica, relate isso e crie um plano de inclusão (lembre-se, deve ter o padrão de arquitetura route/controller/service/dao/models
-
-Crie um plano de implementação detalhado com tudo que for necessario para essa implementação
