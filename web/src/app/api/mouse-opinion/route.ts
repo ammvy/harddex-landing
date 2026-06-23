@@ -72,10 +72,16 @@ Instruções importantes:
       }
     }
 
-    // Fallback: Smart local comparison generated server-side
-    const fallbackText = generateSmartFallbackText(deviceA, deviceB, tdu);
-
-    return NextResponse.json({ text: fallbackText });
+    try {
+      // Fallback: Smart local comparison generated server-side
+      const fallbackText = generateSmartFallbackText(deviceA, deviceB, tdu);
+      return NextResponse.json({ text: fallbackText });
+    } catch (fallbackError) {
+      console.error("Erro ao gerar fallback inteligente do Mouse:", fallbackError);
+      return NextResponse.json({
+        text: "E aí! Mouse na área. Parece que meus circuitos deram uma leve embaralhada com as especificações desses dois. Mas olhando de longe, ambos são fantásticos! Sugiro escolher o que melhor se encaixa no seu orçamento e estilo. 🐭⚡"
+      });
+    }
   } catch (err: any) {
     console.error("Erro no manipulador API Mouse Opinion:", err);
     return NextResponse.json(

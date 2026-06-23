@@ -1,37 +1,44 @@
 import { Device } from "../../compare/_data/types";
 
 export function getSpecsSummary(device: Device, category: string): string {
-  const specs = device.specs as any;
+  const specs = device?.specs || ({} as any);
+  const display = specs.display || {};
+  const battery = specs.battery || {};
+  const camera = specs.camera || {};
+  const webcam = specs.webcam || {};
+  const ports = specs.ports || [];
+  const tdu = device?.tdu || {};
+
   if (category === "phone") {
     return `
-- CPU: ${specs.cpu} (${specs.cpuCores} núcleos, ${specs.cpuClock} GHz, ${specs.process})
-- GPU: ${specs.gpu} (${specs.gpuTflops} TFLOPS)
-- RAM: ${specs.ram} GB ${specs.ramType} (${specs.ramSpeed} MHz)
-- Armazenamento: ${specs.storage} GB ${specs.storageType} (Leitura: ${specs.read} MB/s, Escrita: ${specs.write} MB/s)
-- Tela: ${specs.display.size}", ${specs.display.res}, ${specs.display.refresh}Hz, ${specs.display.panel}, ${specs.display.nits} nits, ${specs.display.gamut}% gamut
-- Bateria: ${specs.battery.capacity} mAh, ${specs.battery.life}h de uso, Recarga ${specs.battery.charge}W (Sem fio: ${specs.battery.wireless}W)
-- Câmeras: Principal de ${specs.camera.main}MP, Ultra-wide ${specs.camera.ultra}MP, Teleobjetiva ${specs.camera.tele}MP, Gravação ${specs.camera.videoK}K
-- Peso/Dimensões: ${specs.weight}g, ${specs.dims}
-- Conectividade: ${specs.wifi}, Bluetooth ${specs.bt}
-- Preço: R$ ${device.price.toLocaleString("pt-BR")}
-- Pontuação Geral: ${device.overall}/100
-- Adequação para o Perfil: ${device.tdu.GAMER ?? 50}% Gamer, ${device.tdu.PRO ?? 50}% Produtividade, ${device.tdu.STUDY ?? 50}% Estudo, ${device.tdu.CREATIVE ?? 50}% Criativo, ${device.tdu.DEV ?? 50}% Dev, ${device.tdu.MOBILE ?? 50}% Mobilidade
+- CPU: ${specs.cpu || "N/A"} (${specs.cpuCores || "N/A"} núcleos, ${specs.cpuClock || "N/A"} GHz, ${specs.process || "N/A"})
+- GPU: ${specs.gpu || "N/A"} (${specs.gpuTflops || "N/A"} TFLOPS)
+- RAM: ${specs.ram || "N/A"} GB ${specs.ramType || "N/A"} (${specs.ramSpeed || "N/A"} MHz)
+- Armazenamento: ${specs.storage || "N/A"} GB ${specs.storageType || "N/A"} (Leitura: ${specs.read || "N/A"} MB/s, Escrita: ${specs.write || "N/A"} MB/s)
+- Tela: ${display.size || "N/A"}", ${display.res || "N/A"}, ${display.refresh || "N/A"}Hz, ${display.panel || "N/A"}, ${display.nits || "N/A"} nits, ${display.gamut || "N/A"}% gamut
+- Bateria: ${battery.capacity || "N/A"} mAh, ${battery.life || "N/A"}h de uso, Recarga ${battery.charge || "N/A"}W (Sem fio: ${battery.wireless || "N/A"}W)
+- Câmeras: Principal de ${camera.main || "N/A"}MP, Ultra-wide ${camera.ultra || "N/A"}MP, Teleobjetiva ${camera.tele || "N/A"}MP, Gravação ${camera.videoK || "N/A"}K
+- Peso/Dimensões: ${specs.weight || "N/A"}g, ${specs.dims || "N/A"}
+- Conectividade: ${specs.wifi || "N/A"}, Bluetooth ${specs.bt || "N/A"}
+- Preço: R$ ${(device?.price || 0).toLocaleString("pt-BR")}
+- Pontuação Geral: ${device?.overall || "N/A"}/100
+- Adequação para o Perfil: ${tdu.GAMER ?? 50}% Gamer, ${tdu.PRO ?? 50}% Produtividade, ${tdu.STUDY ?? 50}% Estudo, ${tdu.CREATIVE ?? 50}% Criativo, ${tdu.DEV ?? 50}% Dev, ${tdu.MOBILE ?? 50}% Mobilidade
 `;
   } else {
     return `
-- CPU: ${specs.cpu} (${specs.cpuCores} núcleos, ${specs.cpuClock} GHz, ${specs.process}, TDP: ${specs.tdp}W)
-- GPU: ${specs.gpu} (${specs.vram}GB VRAM, ${specs.gpuTflops} TFLOPS)
-- RAM: ${specs.ram} GB ${specs.ramType} (${specs.ramSpeed} MHz)
-- Armazenamento: ${specs.storage} GB ${specs.storageType} (Leitura: ${specs.read} MB/s, Escrita: ${specs.write} MB/s)
-- Tela: ${specs.display.size}", ${specs.display.res}, ${specs.display.refresh}Hz, ${specs.display.panel}, ${specs.display.nits} nits, ${specs.display.gamut}% gamut, Resposta: ${specs.display.response}ms
-- Bateria: ${specs.battery.capacity} Wh, ${specs.battery.life}h de uso, Recarga ${specs.battery.charge}W
-- Webcam: ${specs.webcam.mp}MP, Infravermelho: ${specs.webcam.ir ? "Sim" : "Não"}
-- Peso/Dimensões: ${specs.weight}kg, ${specs.dims}
-- Portas: ${specs.ports.join(", ")}
-- Conectividade: ${specs.wifi}, Bluetooth ${specs.bt}
-- Preço: R$ ${device.price.toLocaleString("pt-BR")}
-- Pontuação Geral: ${device.overall}/100
-- Adequação para o Perfil: ${device.tdu.GAMER ?? 50}% Gamer, ${device.tdu.PRO ?? 50}% Produtividade, ${device.tdu.STUDY ?? 50}% Estudo, ${device.tdu.CREATIVE ?? 50}% Criativo, ${device.tdu.DEV ?? 50}% Dev, ${device.tdu.MOBILE ?? 50}% Mobilidade
+- CPU: ${specs.cpu || "N/A"} (${specs.cpuCores || "N/A"} núcleos, ${specs.cpuClock || "N/A"} GHz, ${specs.process || "N/A"}, TDP: ${specs.tdp || "N/A"}W)
+- GPU: ${specs.gpu || "N/A"} (${specs.vram || "N/A"}GB VRAM, ${specs.gpuTflops || "N/A"} TFLOPS)
+- RAM: ${specs.ram || "N/A"} GB ${specs.ramType || "N/A"} (${specs.ramSpeed || "N/A"} MHz)
+- Armazenamento: ${specs.storage || "N/A"} GB ${specs.storageType || "N/A"} (Leitura: ${specs.read || "N/A"} MB/s, Escrita: ${specs.write || "N/A"} MB/s)
+- Tela: ${display.size || "N/A"}", ${display.res || "N/A"}, ${display.refresh || "N/A"}Hz, ${display.panel || "N/A"}, ${display.nits || "N/A"} nits, ${display.gamut || "N/A"}% gamut, Resposta: ${display.response || "N/A"}ms
+- Bateria: ${battery.capacity || "N/A"} Wh, ${battery.life || "N/A"}h de uso, Recarga ${battery.charge || "N/A"}W
+- Webcam: ${webcam.mp || "N/A"}MP, Infravermelho: ${webcam.ir ? "Sim" : "Não"}
+- Peso/Dimensões: ${specs.weight || "N/A"}kg, ${specs.dims || "N/A"}
+- Portas: ${ports.join(", ") || "N/A"}
+- Conectividade: ${specs.wifi || "N/A"}, Bluetooth ${specs.bt || "N/A"}
+- Preço: R$ ${(device?.price || 0).toLocaleString("pt-BR")}
+- Pontuação Geral: ${device?.overall || "N/A"}/100
+- Adequação para o Perfil: ${tdu.GAMER ?? 50}% Gamer, ${tdu.PRO ?? 50}% Produtividade, ${tdu.STUDY ?? 50}% Estudo, ${tdu.CREATIVE ?? 50}% Criativo, ${tdu.DEV ?? 50}% Dev, ${tdu.MOBILE ?? 50}% Mobilidade
 `;
   }
 }
