@@ -236,3 +236,178 @@ Componente em `src/components/header.tsx`:
 | Dados inline no componente | Arquivos em `_data/` |
 | `types.ts` dentro de `_data/` | Pasta dedicada `_types/` com 1 tipo por arquivo |
 | Múltiplos tipos num único arquivo | 1 tipo/interface por arquivo + barrel `index.ts` |
+
+---
+
+## 12. Tooling Obrigatório
+
+### Package Manager: pnpm
+O projeto utiliza **pnpm** como package manager exclusivo. Nunca usar `npm` ou `yarn`.
+- Instalar dependências: `pnpm add <pkg>`
+- Dev dependencies: `pnpm add -D <pkg>`
+- Rodar scripts: `pnpm <script>` ou `pnpm run <script>`
+
+### HTTP Client: Axios
+Todo consumo HTTP (client e server-side) utiliza **axios** — nunca `fetch` nativo.
+- A instância base já inclui `baseURL` com prefixo `/api/v1`
+- Hooks e server fetchers passam apenas o path relativo (ex: `/users`, `/products`)
+
+| ❌ Proibido | ✅ Correto |
+|---|---|
+| `npm install` | `pnpm add` |
+| `fetch("/api/v1/users")` | `api.get("/users")` |
+| `yarn add` | `pnpm add` |
+| URL completa no hook | Path relativo no axios instance |
+
+---
+
+## 13. Consumo de Dados — Prioridade Server-Side
+
+### Regra de ouro: Server-Side First
+Sempre que possível, consumir dados no **server-side** (Server Components, `generateMetadata`, etc.) chamando a API via axios no backend do Next.js. Isso evita waterfalls no client e melhora SEO/performance.
+
+### Quando usar client-side (React Query)
+Usar React Query (`@tanstack/react-query`) apenas quando:
+- O dado depende de **interação do usuário** (filtros, paginação, busca)
+- Precisa de **cache client-side** com revalidação automática
+- É uma **mutação** (POST, PUT, DELETE) que exige feedback imediato
+
+**⚠️ REGRA CRÍTICA PARA CLIENT-SIDE**: 
+A requisição deve ser feita usando SEMPRE um hook do `tanstack-query/react-query`!
+É **terminantemente proibido** realizar chamadas diretas com `api.get` ou `api.post` dentro de componentes (e.g., num `onSubmit` ou `onClick`). A lógica de API client-side deve ser encapsulada em hooks personalizados (`useQuery` ou `useMutation`) que ficam em arquivos isolados dentro da pasta `_hooks/`.
+
+### Estrutura do API Client
+```
+src/lib/
+├── axios.ts               # Instância axios com baseURL (inclui /api/v1)
+├── api-server.ts          # Wrapper server-side axios (injeta cookies/auth)
+└── query-client.ts        # Configuração do QueryClient
+```
+
+### Instância Axios (src/lib/axios.ts)
+```ts
+import axios from "axios";
+
+export const api = axios.create({
+  baseURL: (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333") + "/api/v1",
+  headers: { "Content-Type": "application/json" },
+});
+```
+
+### Server-Side Axios (src/lib/api-server.ts)
+```ts
+import axios from "axios";
+
+const API_BASE = process.env.API_URL ?? "http://localhost:3333";
+
+const serverApi = axios.create({
+  baseURL: API_BASE + "/api/v1",
+  headers: { "Content-Type": "application/json" },
+});
+
+export async function serverFetch<T>(path: string): Promise<T> {
+  const { data } = await serverApi.get<{ success: boolean; data: T }>(path);
+  return data.data;
+}
+```
+
+### Padrão de Hooks com React Query
+Hooks de dados ficam em `_hooks/` da rota, usando React Query + axios:
+
+```ts
+// src/app/admin/users/_hooks/use-users.ts
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import type { User } from "../_types";
+
+export function useUsers() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const { data } = await api.get<{ success: boolean; data: User[] }>("/users");
+      return data.data;
+    },
+  });
+}
+```
+
+### Padrão de Mutations
+```ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: CreateUserInput) => {
+      const { data } = await api.post("/users", payload);
+      return data.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+  });
+}
+```
+
+---
+
+## 14. Autenticação (NextAuth v5 / Auth.js)
+
+### Arquitetura
+- **Provider**: Credentials (email + senha contra API Fastify via axios)
+- **Estratégia de sessão**: JWT (stateless, sem banco no Next.js)
+- **Middleware**: `middleware.ts` na raiz do `src/` para proteção de rotas
+
+### Arquivos de auth
+```
+src/
+├── auth.ts                # Config NextAuth (providers, callbacks)
+├── auth.config.ts         # Config edge-compatible (sem deps Node.js)
+├── middleware.ts          # Proteção de rotas + role-based access
+└── app/api/auth/[...nextauth]/route.ts  # Route handler
+```
+
+### Uso server-side
+```ts
+import { auth } from "@/auth";
+
+export default async function AdminPage() {
+  const session = await auth();
+  // session.user → { id, name, email, permission, style }
+}
+```
+
+### Uso client-side
+```ts
+"use client";
+import { useSession } from "next-auth/react";
+
+export function UserMenu() {
+  const { data: session } = useSession();
+}
+```
+
+### Login/Logout
+```ts
+import { signIn, signOut } from "next-auth/react";
+
+await signIn("credentials", { email, password, redirectTo: "/" });
+await signOut({ redirectTo: "/login" });
+```
+
+---
+
+## 15. Anti-Patterns de Auth e Dados
+
+| ❌ Anti-Pattern | ✅ Padrão Correto |
+|---|---|
+| `fetch()` nativo para API | `api.get()` / `api.post()` via axios |
+| `npm install` / `yarn add` | `pnpm add` |
+| URL completa no hook (`/api/v1/users`) | Path relativo (`/users`) via instância axios |
+| Expor token JWT no client | Token fica no cookie httpOnly via NextAuth |
+| Verificar permissão só no client | Middleware.ts bloqueia no server |
+| `useEffect` + `fetch` para dados iniciais | Server Component com `serverFetch` |
+| Guardar sessão em `useState` | `useSession()` do NextAuth |
+| Criar header/provider de auth custom | Usar SessionProvider do NextAuth |
+

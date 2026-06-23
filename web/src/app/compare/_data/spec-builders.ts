@@ -656,3 +656,111 @@ export function buildLaptopRows(
     },
   ];
 }
+
+export function buildDynamicRows(
+  a: Device<any[]>,
+  b: Device<any[]>,
+): { section: string; rows: RowSpec[] }[] {
+  const componentsA = a.specs || [];
+  const componentsB = b.specs || [];
+
+  // Find all unique component types present in either product
+  const allTypesSet = new Set<string>();
+  componentsA.forEach((c: any) => {
+    if (c.type?.name) allTypesSet.add(c.type.name);
+  });
+  componentsB.forEach((c: any) => {
+    if (c.type?.name) allTypesSet.add(c.type.name);
+  });
+
+  const sections: { section: string; rows: RowSpec[] }[] = [];
+
+  // 1. General Info Section
+  const generalRows: RowSpec[] = [
+    {
+      label: "Marca",
+      level: "basic",
+      better: "none",
+      a: { display: a.brand, raw: 0 },
+      b: { display: b.brand, raw: 0 },
+    },
+    {
+      label: "Preço Médio",
+      level: "basic",
+      better: "lower",
+      a: { display: a.price ? `R$ ${a.price.toLocaleString("pt-BR")}` : "Não informado", raw: a.price || 0 },
+      b: { display: b.price ? `R$ ${b.price.toLocaleString("pt-BR")}` : "Não informado", raw: b.price || 0 },
+    },
+  ];
+  sections.push({ section: "Informações Gerais", rows: generalRows });
+
+  // 2. Component Sections
+  allTypesSet.forEach((typeName) => {
+    const compA = componentsA.find((c: any) => c.type?.name === typeName);
+    const compB = componentsB.find((c: any) => c.type?.name === typeName);
+
+    const rows: RowSpec[] = [];
+
+    // Row for the component name itself
+    rows.push({
+      label: "Modelo do Componente",
+      level: "basic",
+      better: "none",
+      a: { display: compA?.name ?? "Não possui", raw: 0 },
+      b: { display: compB?.name ?? "Não possui", raw: 0 },
+    });
+
+    // Find all unique specification keys for this component type
+    const specKeysSet = new Set<string>();
+    if (compA?.specification) {
+      Object.keys(compA.specification).forEach((k) => specKeysSet.add(k));
+    }
+    if (compB?.specification) {
+      Object.keys(compB.specification).forEach((k) => specKeysSet.add(k));
+    }
+
+    specKeysSet.forEach((key) => {
+      const valA = compA?.specification?.[key];
+      const valB = compB?.specification?.[key];
+
+      if (valA === undefined && valB === undefined) return;
+
+      // Parse numeric values for comparison if possible
+      const parseVal = (v: any): { display: string; raw: number } => {
+        if (v === undefined || v === null) return { display: "-", raw: 0 };
+        if (typeof v === "number") return { display: String(v), raw: v };
+        if (typeof v === "boolean") return { display: v ? "Sim" : "Não", raw: v ? 1 : 0 };
+        const str = String(v);
+        const match = str.match(/^([\d.,]+)/);
+        if (match) {
+          const rawNum = parseFloat(match[1].replace(",", "."));
+          return { display: str, raw: isNaN(rawNum) ? 0 : rawNum };
+        }
+        return { display: str, raw: 0 };
+      };
+
+      const pA = parseVal(valA);
+      const pB = parseVal(valB);
+
+      const lowerIsBetterKeys = ["process", "nanometers", "latency", "tdp", "nm"];
+      const isLowerBetter = lowerIsBetterKeys.some((k) => key.toLowerCase().includes(k));
+      const betterRule = pA.raw === 0 && pB.raw === 0 ? "none" : (isLowerBetter ? "lower" : "higher");
+
+      rows.push({
+        label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
+        level: "mid",
+        better: betterRule as any,
+        a: pA,
+        b: pB,
+      });
+    });
+
+    sections.push({
+      section: typeName,
+      rows,
+    });
+  });
+
+  return sections;
+}
+

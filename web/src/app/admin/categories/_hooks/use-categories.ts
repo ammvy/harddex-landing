@@ -1,47 +1,93 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 import { Category } from "../../_types";
-import { SEED_CATEGORIES } from "../../_data/categories";
 
 export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>(SEED_CATEGORIES);
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [confirmDel, setConfirmDel] = useState<Category | null>(null);
 
+  const {
+    data: allCategories = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
+    queryKey: ["admin", "categories"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get<{ data: Category[] }>("/categories");
+        return data.data ?? [];
+      } catch (error) {
+        throw new Error("Falha ao carregar categorias");
+      }
+    },
+    staleTime: 1000 * 60,
+    retry: 1,
+  });
+
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return categories.filter((c) => {
-      return !query || c.name.toLowerCase().includes(query);
-    });
-  }, [categories, q]);
+    return allCategories.filter(
+      (c: Category) => !query || c.name.toLowerCase().includes(query),
+    );
+  }, [allCategories, q]);
 
   const PAGE_SIZE = 6;
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const curPage = Math.min(page, pages);
-  const paginated = filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
+  const paginated = filtered.slice(
+    (curPage - 1) * PAGE_SIZE,
+    curPage * PAGE_SIZE,
+  );
 
-  const saveCategory = (item: Category) => {
-    if (item.id) {
-      setCategories((prev) => prev.map((x) => (x.id === item.id ? item : x)));
-    } else {
-      setCategories((prev) => [
-        { ...item, id: Date.now() },
-        ...prev,
-      ]);
-    }
-    setEditingCategory(null);
-  };
+  const saveMutation = useMutation({
+    mutationFn: async (category: Category) => {
+      if (category.id) {
+        const { data } = await api.put(`/categories/${category.id}`, category);
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar categoria");
+        return data.data;
+      } else {
+        const { data } = await api.post("/categories", category);
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar categoria");
+        return data.data;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
+      setEditingCategory(null);
+    },
+  });
 
-  const deleteCategory = (id: number) => {
-    setCategories((prev) => prev.filter((x) => x.id !== id));
-    setConfirmDel(null);
-  };
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const { data } = await api.delete(`/categories/${id}`);
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar categoria");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
+      setConfirmDel(null);
+    },
+  });
 
   return {
     categories: paginated,
+    allCategories,
+    isLoading,
+    isFetching,
+    isSaving: saveMutation.isPending,
+    isDeleting: deleteMutation.isPending,
+    error,
+    saveError: saveMutation.error,
+    deleteError: deleteMutation.error,
     q,
     setQ: (v: string) => {
       setQ(v);
@@ -54,8 +100,9 @@ export function useCategories() {
     setEditingCategory,
     confirmDel,
     setConfirmDel,
-    saveCategory,
-    deleteCategory,
+    saveCategory: (item: Category) => saveMutation.mutate(item),
+    deleteCategory: (id: number) => deleteMutation.mutate(id),
   };
 }
+
 export type UseCategoriesReturn = ReturnType<typeof useCategories>;

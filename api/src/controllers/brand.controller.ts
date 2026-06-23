@@ -31,6 +31,6 @@ export class BrandController {
   async delete(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
     await this.service.delete(id);
-    return rep.status(204).send();
+    return rep.status(200).send({ success: true, message: "Marca removida com sucesso" });
   }
 }

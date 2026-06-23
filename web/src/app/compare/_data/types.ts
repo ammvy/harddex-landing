@@ -71,7 +71,7 @@ export interface LaptopSpecs {
   bench: { gbSingle: number; gbMulti: number; threeDmark: number };
 }
 
-export interface Device<S = PhoneSpecs | LaptopSpecs> {
+export interface Device<S = any> {
   id: string;
   category: Category;
   brand: string;

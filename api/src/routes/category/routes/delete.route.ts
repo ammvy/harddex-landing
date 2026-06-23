@@ -14,7 +14,10 @@ export function deleteCategoryRoute({ controller }: { controller: CategoryContro
           tags: ["Categories"],
           params: paramIdDTO,
           response: {
-            204: z.void().describe("Categoria removida com sucesso"),
+            200: z.object({
+              success: z.boolean(),
+              message: z.string(),
+            }).describe("Categoria removida com sucesso"),
             404: errorResponseDTO,
           },
         },

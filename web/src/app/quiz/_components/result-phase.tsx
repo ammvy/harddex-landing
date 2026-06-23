@@ -149,7 +149,7 @@ export function ResultPhase({
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
           <Link
-            href="/"
+            href="/compare"
             style={{ fontFamily: "'Space Mono', monospace" }}
             className="bg-foreground text-background px-7 py-4 uppercase tracking-widest text-[12px] flex items-center gap-3 hover:bg-primary hover:text-white transition-all duration-100 font-mono-brand font-bold cursor-pointer"
           >

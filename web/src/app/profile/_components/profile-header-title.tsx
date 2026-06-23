@@ -8,12 +8,15 @@ interface ProfileHeaderTitleProps {
   onStartEdit: () => void;
   onCancelEdit: () => void;
   onSubmit: () => void;
+  isPending?: boolean;
 }
 
 export default function ProfileHeaderTitle({
   isEditing,
   onStartEdit,
   onCancelEdit,
+  onSubmit,
+  isPending = false,
 }: ProfileHeaderTitleProps) {
   const Mono = { fontFamily: "'Space Mono', monospace" } as const;
 
@@ -41,19 +44,21 @@ export default function ProfileHeaderTitle({
 
       {isEditing && (
         <button
-          onClick={isEditing ? onCancelEdit : onStartEdit}
+          onClick={onSubmit}
+          disabled={isPending}
           style={Mono}
-          className={`ml-auto px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer bg-primary/10 text-primary border border-primary hover:bg-primary hover:text-white`}
+          className={`ml-auto px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer bg-primary/10 text-primary border border-primary hover:bg-primary hover:text-white disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           <Pencil size={13} strokeWidth={1.8} />
-          Salvar perfil
+          {isPending ? "Salvando..." : "Salvar perfil"}
         </button>
       )}
 
       <button
         onClick={isEditing ? onCancelEdit : onStartEdit}
+        disabled={isPending}
         style={Mono}
-        className={`px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer ${
+        className={`px-5 py-3.5 uppercase tracking-widest text-[11px] flex items-center gap-3 transition-colors duration-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
           isEditing
             ? "bg-destructive/10 text-destructive border border-destructive hover:bg-destructive hover:text-white"
             : "bg-foreground text-background hover:bg-primary hover:text-primary-foreground"

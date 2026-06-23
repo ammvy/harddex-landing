@@ -7,6 +7,8 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import QuizBanner from "./quiz-banner";
 import SignupActions from "./signup-actions";
+import { signIn } from "next-auth/react";
+import { useSignupMutation } from "../_hooks/use-signup";
 
 const signupSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -25,6 +27,9 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export default function SignupForm() {
   const router = useRouter();
   const [target, setTarget] = useState<"/quiz" | "/">("/quiz");
+  const [error, setError] = useState<string | null>(null);
+  
+  const signupMutation = useSignupMutation();
 
   const {
     register,
@@ -41,9 +46,36 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
-    console.log("Submitting signup form:", data);
-    console.log("Redirecting to:", target);
-    router.push(target);
+    setError(null);
+    try {
+      // 1. Criar o usuário na API via mutation
+      await signupMutation.mutateAsync({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+
+      // 2. Fazer login automático
+      const loginResponse = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (loginResponse?.error) {
+        router.push("/login?error=auto-login-failed");
+      } else {
+        router.push(target);
+        router.refresh();
+      }
+    } catch (err: any) {
+      const responseMessage = err.response?.data?.message;
+      if (responseMessage && responseMessage.includes("already in use")) {
+        setError("Este e-mail já está em uso.");
+      } else {
+        setError("Erro ao criar a conta. Tente novamente.");
+      }
+    }
   };
 
   return (
@@ -140,6 +172,15 @@ export default function SignupForm() {
           )}
         </label>
       </div>
+
+      {error && (
+        <div
+          style={{ fontFamily: "'Space Mono', monospace" }}
+          className="my-4 text-[11px] text-destructive uppercase tracking-wide text-center bg-destructive/10 py-2 border border-destructive/20"
+        >
+          {error}
+        </div>
+      )}
 
       <QuizBanner active={isValid} />
 

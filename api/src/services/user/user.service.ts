@@ -1,5 +1,6 @@
+import bcrypt from 'bcryptjs';
 import { IUserDAO } from '@/dao/user/user.dao.interface';
-import type { IUserService } from './user.service.interface';
+import type { IUserService, AuthenticateResult } from './user.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
 import { ValidationError } from '@/errors/validation.error';
 import type { UserSelect } from '@infra/database/models/user.schema';
@@ -24,13 +25,24 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async authenticate({ email, password }: { email: string; password: string }): Promise<UserSelect> {
+  async authenticate(
+    { email, password }: { email: string; password: string },
+    jwtSign: (payload: object) => string
+  ): Promise<AuthenticateResult> {
     const user = await this.dao.findByEmail({ email });
-    if (!user || user.password !== password) {
-      throw new NotFoundError('User', email);
-    }
+    if (!user) throw new NotFoundError('User', email);
 
-    return user;
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) throw new ValidationError('Invalid credentials');
+
+    const token = jwtSign({
+      id: user.id,
+      email: user.email,
+      permission: user.permission,
+    });
+
+    const { password: _, ...userWithoutPassword } = user;
+    return { token, user: userWithoutPassword };
   }
 
   async requestPasswordReset({ email }: { email: string }): Promise<UserSelect> {
@@ -52,7 +64,14 @@ export class UserService implements IUserService {
   async create({ data }: { data: CreateUserInput }): Promise<UserSelect> {
     const existingUser = await this.dao.findByEmail({ email: data.email });
     if (existingUser) throw new ValidationError('Email already in use.');
-    return this.dao.create({ data });
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    return this.dao.create({
+      data: {
+        ...data,
+        password: hashedPassword,
+      },
+    });
   }
 
   async update({ id, data }: { id: number; data: UpdateUserInput }): Promise<UserSelect> {

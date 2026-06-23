@@ -1,37 +1,44 @@
-import { useState, useMemo } from "react";
-import { User } from "../../_types";
-import { SEED_USERS } from "../../_data/users";
+"use client";
 
-export interface UseUsersReturn {
-  users: User[];
-  q: string;
-  setQ: (q: string) => void;
-  page: number;
-  pages: number;
-  setPage: (p: number) => void;
-  editingUser: User | null;
-  setEditingUser: (u: User | null) => void;
-  confirmDel: User | null;
-  setConfirmDel: (u: User | null) => void;
-  saveUser: (u: User) => void;
-  deleteUser: (id: number) => void;
-}
+import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { User } from "../../_types";
 
 const PAGE_SIZE = 6;
 
-export function useUsers(): UseUsersReturn {
-  const [allUsers, setAllUsers] = useState<User[]>(SEED_USERS);
+export function useUsers() {
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [confirmDel, setConfirmDel] = useState<User | null>(null);
 
+  const {
+    data: allUsers = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useQuery({
+    queryKey: ["admin", "users"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get<{ data: User[] }>("/users");
+        return data.data ?? [];
+      } catch (error) {
+        throw new Error("Falha ao carregar usuários");
+      }
+    },
+    staleTime: 1000 * 60,
+    retry: 1,
+  });
+
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return allUsers.filter(
-      (u) =>
+      (u: User) =>
         u.name.toLowerCase().includes(term) ||
-        u.email.toLowerCase().includes(term)
+        u.email.toLowerCase().includes(term),
     );
   }, [allUsers, q]);
 
@@ -41,25 +48,53 @@ export function useUsers(): UseUsersReturn {
     return filtered.slice((curPage - 1) * PAGE_SIZE, curPage * PAGE_SIZE);
   }, [filtered, curPage]);
 
-  const saveUser = (user: User) => {
-    if (user.id === 0) {
-      const nextId = Math.max(0, ...allUsers.map((u) => u.id)) + 1;
-      setAllUsers((prev) => [...prev, { ...user, id: nextId }]);
-    } else {
-      setAllUsers((prev) => prev.map((u) => (u.id === user.id ? user : u)));
-    }
-    setEditingUser(null);
-  };
+  const saveMutation = useMutation({
+    mutationFn: async (user: User) => {
+      if (user.id) {
+        const { data } = await api.put(`/users/${user.id}`, user);
+        if (!data.success)
+          throw new Error(data.message || "Erro ao atualizar usuário");
+        return data.data;
+      } else {
+        const { data } = await api.post("/users", user);
+        if (!data.success)
+          throw new Error(data.message || "Erro ao criar usuário");
+        return data.data;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setEditingUser(null);
+    },
+  });
 
-  const deleteUser = (id: number) => {
-    setAllUsers((prev) => prev.filter((u) => u.id !== id));
-    setConfirmDel(null);
-  };
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const { data } = await api.delete(`/users/${id}`);
+      if (!data.success)
+        throw new Error(data.message || "Erro ao deletar usuário");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      setConfirmDel(null);
+    },
+  });
 
   return {
     users: paginatedUsers,
+    allUsers,
+    isLoading,
+    isFetching,
+    isSaving: saveMutation.isPending,
+    isDeleting: deleteMutation.isPending,
+    error,
+    saveError: saveMutation.error,
+    deleteError: deleteMutation.error,
     q,
-    setQ,
+    setQ: (v: string) => {
+      setQ(v);
+      setPage(1);
+    },
     page: curPage,
     pages,
     setPage,
@@ -67,7 +102,9 @@ export function useUsers(): UseUsersReturn {
     setEditingUser,
     confirmDel,
     setConfirmDel,
-    saveUser,
-    deleteUser,
+    saveUser: (user: User) => saveMutation.mutate(user),
+    deleteUser: (id: number) => deleteMutation.mutate(id),
   };
 }
+
+export type UseUsersReturn = ReturnType<typeof useUsers>;

@@ -14,7 +14,10 @@ export function deleteComponentRoute({ controller }: { controller: ComponentCont
           tags: ["Components"],
           params: paramIdDTO,
           response: {
-            204: z.void().describe("Componente removido com sucesso"),
+            200: z.object({
+              success: z.boolean(),
+              message: z.string(),
+            }).describe("Componente removido com sucesso"),
             404: errorResponseDTO,
           },
         },

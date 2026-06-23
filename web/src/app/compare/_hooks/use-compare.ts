@@ -1,58 +1,43 @@
-import { useState, useMemo } from "react";
-import {
-  Category,
-  Detail,
-  Device,
-  PhoneSpecs,
-  LaptopSpecs,
-} from "../_data/types";
-import { PHONES } from "../_data/phones";
-import { LAPTOPS } from "../_data/laptops";
-import { buildPhoneRows, buildLaptopRows } from "../_data/spec-builders";
+"use client";
+
+import { useState, useMemo, useEffect } from "react";
+import { Detail, Device } from "../_data/types";
+import { buildDynamicRows } from "../_data/spec-builders";
 import { ProfileId } from "@/components/mouse";
+import { useCompareQuery } from "./use-compare-query";
 
 export function useCompare() {
-  const [category, setCategory] = useState<Category>("phone");
+  const { data: dbDevices = [], isLoading, isError } = useCompareQuery();
+
   const [detail, setDetail] = useState<Detail>("mid");
   const [profile, setProfile] = useState<ProfileId | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [pickerA, setPickerA] = useState(false);
   const [pickerB, setPickerB] = useState(false);
 
-  const [aPhone, setAPhone] = useState(PHONES[0]);
-  const [bPhone, setBPhone] = useState(PHONES[1]);
-  const [aLaptop, setALaptop] = useState(LAPTOPS[0]);
-  const [bLaptop, setBLaptop] = useState(LAPTOPS[1]);
+  const [a, setA] = useState<Device | null>(null);
+  const [b, setB] = useState<Device | null>(null);
 
-  const devices = category === "phone" ? PHONES : LAPTOPS;
-  const a: Device = category === "phone" ? aPhone : aLaptop;
-  const b: Device = category === "phone" ? bPhone : bLaptop;
-
-  const setA = (d: Device) => {
-    if (category === "phone") {
-      setAPhone(d as Device<PhoneSpecs>);
-    } else {
-      setALaptop(d as Device<LaptopSpecs>);
+  // Initialize a and b once products are loaded
+  useEffect(() => {
+    if (dbDevices.length > 0) {
+      if (!a) {
+        setA(dbDevices[0]);
+      }
+      if (!b && dbDevices.length > 1) {
+        setB(dbDevices[1]);
+      }
     }
-  };
-
-  const setB = (d: Device) => {
-    if (category === "phone") {
-      setBPhone(d as Device<PhoneSpecs>);
-    } else {
-      setBLaptop(d as Device<LaptopSpecs>);
-    }
-  };
+  }, [dbDevices, a, b]);
 
   const sections = useMemo(() => {
-    return category === "phone"
-      ? buildPhoneRows(a as Device<PhoneSpecs>, b as Device<PhoneSpecs>)
-      : buildLaptopRows(a as Device<LaptopSpecs>, b as Device<LaptopSpecs>);
-  }, [a, b, category]);
+    if (!a || !b) return [];
+    return buildDynamicRows(a, b);
+  }, [a, b]);
 
   return {
-    category,
-    setCategory,
+    isLoading,
+    isError,
     detail,
     setDetail,
     profile,
@@ -63,7 +48,7 @@ export function useCompare() {
     setPickerA,
     pickerB,
     setPickerB,
-    devices,
+    devices: dbDevices,
     a,
     b,
     setA,

@@ -47,11 +47,7 @@ export default function CategoriesTable({
       />
 
       <div className="flex items-center gap-2 flex-wrap mb-4">
-        <SearchBar
-          value={q}
-          onChange={setQ}
-          placeholder="Buscar categoria"
-        />
+        <SearchBar value={q} onChange={setQ} placeholder="Buscar categoria" />
       </div>
 
       <div className="border border-border overflow-x-auto bg-background">
@@ -100,7 +96,10 @@ export default function CategoriesTable({
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1.5">
-                    <IconBtn title="Editar" onClick={() => setEditingCategory(c)}>
+                    <IconBtn
+                      title="Editar"
+                      onClick={() => setEditingCategory(c)}
+                    >
                       <Pencil size={14} strokeWidth={1.7} />
                     </IconBtn>
                     <IconBtn
@@ -153,7 +152,7 @@ export default function CategoriesTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteCategory(confirmDel.id)}
+                  onClick={() => deleteCategory(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >

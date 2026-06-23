@@ -3,4 +3,5 @@ node_modules/
 dist/
 .pnpm-debug.log
 *.log
-*ai
+*.turbo
+#*ai

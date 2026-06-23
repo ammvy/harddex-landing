@@ -31,6 +31,6 @@ export class ReviewController {
   async delete(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
     await this.service.delete({ id: Number(id) });
-    return rep.status(204).send();
+    return rep.status(200).send({ success: true, message: "Avaliação removida com sucesso" });
   }
 }

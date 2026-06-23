@@ -156,7 +156,7 @@ export default function UsersTable({
                   Cancelar
                 </button>
                 <button
-                  onClick={() => deleteUser(confirmDel.id)}
+                  onClick={() => deleteUser(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
                   className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
                 >
