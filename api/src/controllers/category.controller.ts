@@ -11,7 +11,7 @@ export class CategoryController {
 
   async getById(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
-    const category = await this.service.getById(id);
+    const category = await this.service.getById({ id: Number(id) });
     console.log("CategoryController.getById - category:", category);
     return rep.status(200).send({ success: true, data: category });
   }
@@ -31,7 +31,7 @@ export class CategoryController {
 
   async delete(req: FastifyRequest, rep: FastifyReply) {
     const { id } = req.params as any;
-    await this.service.delete(id);
+    await this.service.delete({ id: Number(id) });
     return rep.status(200).send({ success: true, message: "Categoria removida com sucesso" });
   }
 }
