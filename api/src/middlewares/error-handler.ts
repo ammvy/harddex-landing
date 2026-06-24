@@ -4,29 +4,30 @@ import { DomainError } from '@/errors/domain-error';
 
 export function errorHandler(error: FastifyError, _req: FastifyRequest, reply: FastifyReply) {
   if (error instanceof ZodError) {
+    const errorMsg = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
     return reply.status(400).send({
       success: false,
-      error: { message: 'Validation failed', details: error.flatten().fieldErrors },
+      error: `Validation failed: ${errorMsg}`,
     });
   }
 
   if (error instanceof DomainError) {
     return reply.status(error.statusCode).send({
       success: false,
-      error: { message: error.message },
+      error: error.message,
     });
   }
 
   if (error.statusCode) {
     return reply.status(error.statusCode).send({
       success: false,
-      error: { message: error.message },
+      error: error.message,
     });
   }
 
   console.error('Unhandled error:', error);
   return reply.status(500).send({
     success: false,
-    error: { message: 'Internal Server Error' },
+    error: 'Internal Server Error',
   });
 }

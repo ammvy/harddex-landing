@@ -48,16 +48,21 @@ export function useCategories() {
 
   const saveMutation = useMutation({
     mutationFn: async (category: Category) => {
-      if (category.id) {
-        const { data } = await api.put(`/categories/${category.id}`, category);
-        if (!data.success)
-          throw new Error(data.message || "Erro ao atualizar categoria");
-        return data.data;
-      } else {
-        const { data } = await api.post("/categories", category);
-        if (!data.success)
-          throw new Error(data.message || "Erro ao criar categoria");
-        return data.data;
+      try {
+        if (category.id) {
+          const { data } = await api.put(`/categories/${category.id}`, category);
+          if (!data.success)
+            throw new Error(data.error || data.message || "Erro ao atualizar categoria");
+          return data.data;
+        } else {
+          const { data } = await api.post("/categories", category);
+          if (!data.success)
+            throw new Error(data.error || data.message || "Erro ao criar categoria");
+          return data.data;
+        }
+      } catch (err: any) {
+        const message = err.response?.data?.error || err.response?.data?.message || err.message || "Erro ao salvar categoria";
+        throw new Error(message);
       }
     },
     onSuccess: () => {
@@ -68,9 +73,14 @@ export function useCategories() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const { data } = await api.delete(`/categories/${id}`);
-      if (!data.success)
-        throw new Error(data.message || "Erro ao deletar categoria");
+      try {
+        const { data } = await api.delete(`/categories/${id}`);
+        if (!data.success)
+          throw new Error(data.error || data.message || "Erro ao deletar categoria");
+      } catch (err: any) {
+        const message = err.response?.data?.error || err.response?.data?.message || err.message || "Erro ao deletar categoria";
+        throw new Error(message);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });

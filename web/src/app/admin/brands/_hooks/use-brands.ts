@@ -52,20 +52,25 @@ export function useBrands() {
   // === MUTATION: POST (CREATE) + PUT (UPDATE) ===
   const saveMutation = useMutation({
     mutationFn: async (brand: Brand) => {
-      if (brand.id) {
-        // UPDATE
-        const { data } = await api.put(`/brands/${brand.id}`, brand);
-        if (!data.success) {
-          throw new Error(data.message || "Erro ao atualizar marca");
+      try {
+        if (brand.id) {
+          // UPDATE
+          const { data } = await api.put(`/brands/${brand.id}`, brand);
+          if (!data.success) {
+            throw new Error(data.error || data.message || "Erro ao atualizar marca");
+          }
+          return data.data;
+        } else {
+          // CREATE
+          const { data } = await api.post("/brands", brand);
+          if (!data.success) {
+            throw new Error(data.error || data.message || "Erro ao criar marca");
+          }
+          return data.data;
         }
-        return data.data;
-      } else {
-        // CREATE
-        const { data } = await api.post("/brands", brand);
-        if (!data.success) {
-          throw new Error(data.message || "Erro ao criar marca");
-        }
-        return data.data;
+      } catch (err: any) {
+        const message = err.response?.data?.error || err.response?.data?.message || err.message || "Erro ao salvar marca";
+        throw new Error(message);
       }
     },
     onSuccess: () => {
@@ -79,9 +84,14 @@ export function useBrands() {
   // === MUTATION: DELETE ===
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const { data } = await api.delete(`/brands/${id}`);
-      if (!data.success) {
-        throw new Error(data.message || "Erro ao deletar marca");
+      try {
+        const { data } = await api.delete(`/brands/${id}`);
+        if (!data.success) {
+          throw new Error(data.error || data.message || "Erro ao deletar marca");
+        }
+      } catch (err: any) {
+        const message = err.response?.data?.error || err.response?.data?.message || err.message || "Erro ao deletar marca";
+        throw new Error(message);
       }
     },
     onSuccess: () => {
