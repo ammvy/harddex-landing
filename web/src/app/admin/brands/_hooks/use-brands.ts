@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Brand } from "../../_types";
+import { toast } from "sonner";
 
 export function useBrands() {
   const queryClient = useQueryClient();
@@ -73,11 +74,15 @@ export function useBrands() {
         throw new Error(message);
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["admin", "brands"],
       });
       setEditingBrand(null);
+      toast.success(variables.id ? "Marca atualizada com sucesso!" : "Marca criada com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao salvar marca");
     },
   });
 
@@ -99,6 +104,10 @@ export function useBrands() {
         queryKey: ["admin", "brands"],
       });
       setConfirmDel(null);
+      toast.success("Marca excluída com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao deletar marca");
     },
   });
 

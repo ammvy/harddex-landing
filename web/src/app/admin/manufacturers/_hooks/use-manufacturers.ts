@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Manufacturer } from "../../_types";
+import { toast } from "sonner";
 
 export function useManufacturers() {
   const queryClient = useQueryClient();
@@ -65,9 +66,13 @@ export function useManufacturers() {
         return data.data;
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "manufacturers"] });
       setEditing(null);
+      toast.success(variables.id ? "Fabricante atualizado com sucesso!" : "Fabricante criado com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao salvar fabricante");
     },
   });
 
@@ -80,6 +85,10 @@ export function useManufacturers() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "manufacturers"] });
       setConfirmDel(null);
+      toast.success("Fabricante excluído com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao deletar fabricante");
     },
   });
 

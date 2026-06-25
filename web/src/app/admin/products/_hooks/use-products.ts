@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Brand, Category, Product } from "../../_types";
+import { toast } from "sonner";
 
 export function useProducts() {
   const queryClient = useQueryClient();
@@ -96,9 +97,13 @@ export function useProducts() {
         return data.data;
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
       setEditing(null);
+      toast.success(variables.id ? "Produto atualizado com sucesso!" : "Produto criado com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao salvar produto");
     },
   });
 
@@ -111,6 +116,10 @@ export function useProducts() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
       setConfirmDel(null);
+      toast.success("Produto excluído com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao deletar produto");
     },
   });
 

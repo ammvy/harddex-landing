@@ -10,6 +10,7 @@ type UserEditModalProps = {
   onClose: () => void;
   onSave: (u: User) => void;
   user: User | null;
+  isSaving: boolean;
 };
 
 export function UserEditModal({
@@ -17,6 +18,7 @@ export function UserEditModal({
   onClose,
   onSave,
   user,
+  isSaving,
 }: UserEditModalProps) {
   const [draft, setDraft] = useState<User>({
     id: user?.id || 0,
@@ -52,23 +54,24 @@ export function UserEditModal({
   return (
     <Modal
       title={user ? "Editar usuário" : "Novo usuário"}
-      onClose={onClose}
+      onClose={() => !isSaving && onClose()}
       footer={
         <>
           <button
+            disabled={isSaving}
             onClick={onClose}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background"
+            className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
           <button
-            disabled={!valid}
+            disabled={!valid || isSaving}
             onClick={handleSave}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="flex-1 bg-primary text-primary-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 disabled:opacity-40 cursor-pointer"
+            className="flex-1 bg-primary text-primary-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
           >
-            Salvar
+            {isSaving ? "Salvando..." : "Salvar"}
           </button>
         </>
       }
@@ -76,9 +79,10 @@ export function UserEditModal({
       <div className="flex flex-col gap-4">
         <Field label="Nome">
           <input
+            disabled={isSaving}
             value={draft.name}
             onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder="Ex: Marina Tavares"
           />
         </Field>
@@ -86,9 +90,10 @@ export function UserEditModal({
         <Field label="Email">
           <input
             type="email"
+            disabled={isSaving}
             value={draft.email}
             onChange={(e) => setDraft({ ...draft, email: e.target.value })}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder="Ex: marina@harddex.io"
           />
         </Field>
@@ -96,19 +101,21 @@ export function UserEditModal({
         <Field label="Senha">
           <input
             type="password"
+            disabled={isSaving}
             value={draft.password || ""}
             onChange={(e) => setDraft({ ...draft, password: e.target.value })}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder={user ? "Em branco para não alterar" : "Senha obrigatória"}
           />
         </Field>
 
         <Field label="Estilo de Usuário">
           <select
+            disabled={isSaving}
             value={draft.style}
             onChange={(e) => setDraft({ ...draft, style: e.target.value as UserStyle })}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none uppercase tracking-wider text-[11px] focus:border-primary transition-colors duration-100 text-foreground w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none uppercase tracking-wider text-[11px] focus:border-primary transition-colors duration-100 text-foreground w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="BASIC">BASIC</option>
             <option value="INTERMEDIATE">INTERMEDIATE</option>
@@ -124,10 +131,11 @@ export function UserEditModal({
 
         <Field label="Permissão">
           <select
+            disabled={isSaving}
             value={draft.permission}
             onChange={(e) => setDraft({ ...draft, permission: e.target.value as Permission })}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none uppercase tracking-wider text-[11px] focus:border-primary transition-colors duration-100 text-foreground w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none uppercase tracking-wider text-[11px] focus:border-primary transition-colors duration-100 text-foreground w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="ADMIN">ADMIN</option>
             <option value="USER">USER</option>

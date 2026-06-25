@@ -9,6 +9,7 @@ type ComponentEditModalProps = {
   manufacturers: Manufacturer[];
   onClose: () => void;
   onSave: (c: Component) => void;
+  isSaving: boolean;
 };
 
 export default function ComponentEditModal({
@@ -17,6 +18,7 @@ export default function ComponentEditModal({
   manufacturers,
   onClose,
   onSave,
+  isSaving,
 }: ComponentEditModalProps) {
   const [draft, setDraft] = useState<Component>({
     id: component.id || 0,
@@ -48,43 +50,46 @@ export default function ComponentEditModal({
   return (
     <Modal
       title={component.id ? "Editar componente" : "Novo componente"}
-      onClose={onClose}
+      onClose={() => !isSaving && onClose()}
       footer={
         <>
           <button
+            disabled={isSaving}
             onClick={onClose}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background"
+            className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
           <button
-            disabled={!valid}
+            disabled={!valid || isSaving}
             onClick={() => onSave({ ...draft, name: draft.name.trim() })}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="flex-1 bg-primary text-primary-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 disabled:opacity-40 cursor-pointer"
+            className="flex-1 bg-primary text-primary-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
           >
-            Salvar
+            {isSaving ? "Salvando..." : "Salvar"}
           </button>
         </>
       }
     >
       <Field label="Nome">
         <input
+          disabled={isSaving}
           value={draft.name}
           onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full"
+          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full disabled:opacity-50 disabled:cursor-not-allowed"
           placeholder="Ex: Chip Gráfico AD104"
         />
       </Field>
 
       <Field label="Especificação (JSON)">
         <textarea
+          disabled={isSaving}
           value={specText}
           onChange={(e) => handleSpecChange(e.target.value)}
           className={`bg-input-background border ${
             jsonError ? "border-destructive focus:border-destructive" : "border-border focus:border-primary"
-          } px-3 py-2.5 outline-none text-[12px] font-mono transition-colors duration-100 text-foreground w-full min-h-[100px]`}
+          } px-3 py-2.5 outline-none text-[12px] font-mono transition-colors duration-100 text-foreground w-full min-h-[100px] disabled:opacity-50 disabled:cursor-not-allowed`}
           placeholder='{\n  "Cores": "8",\n  "Clock": "3.5GHz"\n}'
         />
         {jsonError && <span className="text-[10px] text-destructive font-mono uppercase">{jsonError}</span>}
@@ -92,9 +97,10 @@ export default function ComponentEditModal({
 
       <Field label="Descrição">
         <textarea
+          disabled={isSaving}
           value={draft.description || ""}
           onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full min-h-[80px]"
+          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full min-h-[80px] disabled:opacity-50 disabled:cursor-not-allowed"
           placeholder="Descrição do componente..."
         />
       </Field>
@@ -102,20 +108,22 @@ export default function ComponentEditModal({
       <Field label="Preço Médio (R$)">
         <input
           type="number"
+          disabled={isSaving}
           min={0}
           value={draft.averagePrice || 0}
           onChange={(e) => setDraft({ ...draft, averagePrice: Number(e.target.value) })}
-          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full"
+          className="bg-input-background border border-border px-3 py-2.5 outline-none text-[13px] focus:border-primary transition-colors duration-100 text-foreground placeholder:text-muted-foreground/50 w-full disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </Field>
 
       <div className="grid grid-cols-2 gap-3">
         <Field label="Produto Pai">
           <select
+            disabled={isSaving}
             value={draft.productId}
             onChange={(e) => setDraft({ ...draft, productId: Number(e.target.value) })}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[11px] focus:border-primary transition-colors duration-100 text-foreground uppercase tracking-wider w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[11px] focus:border-primary transition-colors duration-100 text-foreground uppercase tracking-wider w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {products.map((p) => (
               <option key={p.id} value={p.id}>
@@ -127,10 +135,11 @@ export default function ComponentEditModal({
 
         <Field label="Fabricante">
           <select
+            disabled={isSaving}
             value={draft.manufacturerId || ""}
             onChange={(e) => setDraft({ ...draft, manufacturerId: e.target.value ? Number(e.target.value) : null })}
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[11px] focus:border-primary transition-colors duration-100 text-foreground uppercase tracking-wider w-full"
+            className="bg-input-background border border-border px-3 py-2.5 outline-none text-[11px] focus:border-primary transition-colors duration-100 text-foreground uppercase tracking-wider w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">Nenhum</option>
             {manufacturers.map((m) => (

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Category } from "../../_types";
+import { toast } from "sonner";
 
 export function useCategories() {
   const queryClient = useQueryClient();
@@ -65,9 +66,13 @@ export function useCategories() {
         throw new Error(message);
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       setEditingCategory(null);
+      toast.success(variables.id ? "Categoria atualizada com sucesso!" : "Categoria criada com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao salvar categoria");
     },
   });
 
@@ -85,6 +90,10 @@ export function useCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       setConfirmDel(null);
+      toast.success("Categoria excluída com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao deletar categoria");
     },
   });
 

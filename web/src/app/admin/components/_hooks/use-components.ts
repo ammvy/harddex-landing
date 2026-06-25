@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Component } from "../../_types";
+import { toast } from "sonner";
 
 export function useComponents() {
   const queryClient = useQueryClient();
@@ -96,9 +97,13 @@ export function useComponents() {
         return data.data;
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "components"] });
       setEditing(null);
+      toast.success(variables.id ? "Componente atualizado com sucesso!" : "Componente criado com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao salvar componente");
     },
   });
 
@@ -111,6 +116,10 @@ export function useComponents() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "components"] });
       setConfirmDel(null);
+      toast.success("Componente excluído com sucesso!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Erro ao deletar componente");
     },
   });
 

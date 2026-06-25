@@ -29,6 +29,8 @@ export default function ProductsTable({
   setConfirmDel,
   saveProduct,
   deleteProduct,
+  isSaving,
+  isDeleting,
 }: UseProductsReturn) {
   const emptyProduct = () => ({
     id: 0,
@@ -168,28 +170,31 @@ export default function ProductsTable({
             categories={categories}
             onClose={() => setEditing(null)}
             onSave={saveProduct}
+            isSaving={isSaving}
           />
         )}
 
         {confirmDel && (
           <Modal
             title="Excluir produto"
-            onClose={() => setConfirmDel(null)}
+            onClose={() => !isDeleting && setConfirmDel(null)}
             footer={
               <>
                 <button
+                  disabled={isDeleting}
                   onClick={() => setConfirmDel(null)}
                   style={{ fontFamily: "'Space Mono', monospace" }}
-                  className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background"
+                  className="flex-1 border border-border py-3 uppercase tracking-widest text-[11px] hover:text-primary hover:border-primary transition-colors duration-100 cursor-pointer text-foreground bg-background disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button
+                  disabled={isDeleting}
                   onClick={() => deleteProduct(Number(confirmDel!.id))}
                   style={{ fontFamily: "'Space Mono', monospace" }}
-                  className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer"
+                  className="flex-1 bg-destructive text-destructive-foreground py-3 uppercase tracking-widest text-[11px] hover:opacity-90 transition-opacity duration-100 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  Excluir
+                  {isDeleting ? "Excluindo..." : "Excluir"}
                 </button>
               </>
             }
