@@ -64,6 +64,7 @@ function ProfileContent({ user }: ProfileContentProps) {
             error={form.formState.errors.name?.message}
             onCancelEdit={cancelEdit}
             onSubmit={onSubmit}
+            disabled={isPending}
           />
         </div>
 

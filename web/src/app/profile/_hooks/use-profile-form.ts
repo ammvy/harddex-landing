@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { profileNameSchema, ProfileNameFormValues } from "../_data/profile-name.schema";
+import { toast } from "sonner";
 
 interface UseProfileFormProps {
   user: { id: string; name: string };
@@ -47,6 +48,11 @@ export function useProfileForm({ user }: UseProfileFormProps) {
       await update({ name: newName });
 
       setIsEditing(false);
+      toast.success("Perfil atualizado com sucesso!");
+    },
+    onError: (err: any) => {
+      const message = err.response?.data?.message || err.message || "Erro ao atualizar perfil";
+      toast.error(message);
     },
   });
 

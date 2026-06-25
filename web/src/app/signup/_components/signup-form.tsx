@@ -9,6 +9,7 @@ import QuizBanner from "./quiz-banner";
 import SignupActions from "./signup-actions";
 import { signIn } from "next-auth/react";
 import { useSignupMutation } from "../_hooks/use-signup";
+import { toast } from "sonner";
 
 const signupSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório"),
@@ -27,7 +28,6 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export default function SignupForm() {
   const router = useRouter();
   const [target, setTarget] = useState<"/quiz" | "/">("/quiz");
-  const [error, setError] = useState<string | null>(null);
   
   const signupMutation = useSignupMutation();
 
@@ -46,7 +46,6 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
-    setError(null);
     try {
       // 1. Criar o usuário na API via mutation
       await signupMutation.mutateAsync({
@@ -63,17 +62,19 @@ export default function SignupForm() {
       });
 
       if (loginResponse?.error) {
+        toast.error("Cadastro realizado, mas falha ao efetuar login automático.");
         router.push("/login?error=auto-login-failed");
       } else {
+        toast.success("Cadastro realizado com sucesso!");
         router.push(target);
         router.refresh();
       }
     } catch (err: any) {
       const responseMessage = err.response?.data?.message;
       if (responseMessage && responseMessage.includes("already in use")) {
-        setError("Este e-mail já está em uso.");
+        toast.error("Este e-mail já está em uso.");
       } else {
-        setError("Erro ao criar a conta. Tente novamente.");
+        toast.error("Erro ao criar a conta. Tente novamente.");
       }
     }
   };
@@ -95,9 +96,10 @@ export default function SignupForm() {
           </span>
           <input
             type="text"
+            disabled={isSubmitting}
             placeholder="como devemos chamar você"
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 ${
+            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
               errors.name
                 ? "border-destructive focus:border-destructive"
                 : "border-foreground focus:border-primary"
@@ -124,9 +126,10 @@ export default function SignupForm() {
           </span>
           <input
             type="email"
+            disabled={isSubmitting}
             placeholder="seu@email.com"
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 ${
+            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
               errors.email
                 ? "border-destructive focus:border-destructive"
                 : "border-foreground focus:border-primary"
@@ -153,9 +156,10 @@ export default function SignupForm() {
           </span>
           <input
             type="password"
+            disabled={isSubmitting}
             placeholder="mínimo 6 caracteres"
             style={{ fontFamily: "'Space Mono', monospace" }}
-            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 ${
+            className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
               errors.password
                 ? "border-destructive focus:border-destructive"
                 : "border-foreground focus:border-primary"
@@ -172,15 +176,6 @@ export default function SignupForm() {
           )}
         </label>
       </div>
-
-      {error && (
-        <div
-          style={{ fontFamily: "'Space Mono', monospace" }}
-          className="my-4 text-[11px] text-destructive uppercase tracking-wide text-center bg-destructive/10 py-2 border border-destructive/20"
-        >
-          {error}
-        </div>
-      )}
 
       <QuizBanner active={isValid} />
 

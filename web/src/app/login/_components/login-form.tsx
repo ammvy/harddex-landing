@@ -7,6 +7,7 @@ import { z } from "zod";
 import { ArrowRight } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z
@@ -22,7 +23,6 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const {
@@ -38,7 +38,6 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    setError(null);
     try {
       const response = await signIn("credentials", {
         email: data.email,
@@ -47,13 +46,14 @@ export default function LoginForm() {
       });
 
       if (response?.error) {
-        setError("Credenciais inválidas. Verifique seu e-mail e senha.");
+        toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
       } else {
+        toast.success("Login efetuado com sucesso!");
         router.push("/");
         router.refresh();
       }
     } catch (err) {
-      setError("Ocorreu um erro ao fazer login. Tente novamente.");
+      toast.error("Ocorreu um erro ao fazer login. Tente novamente.");
     }
   };
 
@@ -68,9 +68,10 @@ export default function LoginForm() {
         </span>
         <input
           type="email"
+          disabled={isSubmitting}
           placeholder="seu@email.com"
           style={{ fontFamily: "'Space Mono', monospace" }}
-          className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 ${
+          className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
             errors.email
               ? "border-destructive focus:border-destructive"
               : "border-foreground focus:border-primary"
@@ -96,9 +97,10 @@ export default function LoginForm() {
         </span>
         <input
           type="password"
+          disabled={isSubmitting}
           placeholder="••••••••"
           style={{ fontFamily: "'Space Mono', monospace" }}
-          className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 ${
+          className={`bg-input-background border px-4 py-3.5 outline-none uppercase tracking-widest text-[12px] placeholder:text-muted-foreground/50 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed ${
             errors.password
               ? "border-destructive focus:border-destructive"
               : "border-foreground focus:border-primary"
@@ -114,15 +116,6 @@ export default function LoginForm() {
           </span>
         )}
       </label>
-
-      {error && (
-        <div
-          style={{ fontFamily: "'Space Mono', monospace" }}
-          className="text-[11px] text-destructive uppercase tracking-wide text-center bg-destructive/10 py-2 border border-destructive/20"
-        >
-          {error}
-        </div>
-      )}
 
       <button
         type="submit"

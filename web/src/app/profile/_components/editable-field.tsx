@@ -11,6 +11,7 @@ interface EditableFieldProps {
   error?: string;
   onCancel: () => void;
   onSubmit: () => void;
+  disabled?: boolean;
 }
 
 export default function EditableField({
@@ -20,6 +21,7 @@ export default function EditableField({
   error,
   onCancel,
   onSubmit,
+  disabled,
 }: EditableFieldProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -69,7 +71,8 @@ export default function EditableField({
           >
             <input
               type="text"
-              className="w-full text-[20px] sm:text-[22px] font-medium text-foreground bg-transparent border-b border-primary py-1 outline-none transition-colors duration-100"
+              disabled={disabled}
+              className="w-full text-[20px] sm:text-[22px] font-medium text-foreground bg-transparent border-b border-primary py-1 outline-none transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
               onKeyDown={handleKeyDown}
               {...registerRest}
               ref={(element) => {

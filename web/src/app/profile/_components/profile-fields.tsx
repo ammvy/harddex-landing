@@ -13,6 +13,7 @@ interface ProfileFieldsProps {
   error?: string;
   onCancelEdit: () => void;
   onSubmit: () => void;
+  disabled?: boolean;
 }
 
 export default function ProfileFields({
@@ -22,6 +23,7 @@ export default function ProfileFields({
   error,
   onCancelEdit,
   onSubmit,
+  disabled,
 }: ProfileFieldsProps) {
   const Mono = { fontFamily: "'Space Mono', monospace" } as const;
 
@@ -47,6 +49,7 @@ export default function ProfileFields({
           error={error}
           onCancel={onCancelEdit}
           onSubmit={onSubmit}
+          disabled={disabled}
         />
       </div>
 

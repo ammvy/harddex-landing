@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { ProfileId } from "../_data/types";
+import { toast } from "sonner";
 
 const STYLE_MAPPING: Record<ProfileId, string> = {
   GAMER: "GAMER",
@@ -42,6 +43,11 @@ export function useUpdateUserStyleMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast.success("Estilo de uso atualizado!");
+    },
+    onError: (err: any) => {
+      const message = err.response?.data?.message || err.message || "Erro ao atualizar estilo de uso";
+      toast.error(message);
     },
   });
 }
