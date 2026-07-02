@@ -74,6 +74,10 @@ export function buildApp() {
           url: `http://localhost:${env.PORT}`,
           description: "Servidor de Desenvolvimento",
         },
+        {
+          url: "https://harddexapi.victorlisbronzo.me",
+          description: "Servidor de Produção",
+        },
       ],
     },
     transform: createJsonSchemaTransform({
