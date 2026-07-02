@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from "bcryptjs";
 import { IUserDAO } from '@/dao/user/user.dao.interface';
 import type { IUserService, AuthenticateResult } from './user.service.interface';
 import { NotFoundError } from '@/errors/not-found.error';
